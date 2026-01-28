@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web开发学习笔记</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-pagefind-body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
+
+    <header class="header">
+        <div class="container">
+            <h1 class="logo"><a href="../index.html">My Blog</a></h1>
+            <nav class="nav">
+                <a href="../index.html">首页</a>
+                <a href="../index.html#articles">文章</a>
+                <a href="../index.html#about">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <article class="article-content">
+            <div class="container">
+                <header class="article-header">
+                    <h1>Web开发学习笔记</h1>
+                    <p class="article-meta">
+                        <span class="date">📅 2026-01-02</span>
+                        <span class="reading-time">⏱️ 约 1 分钟阅读</span>
+                        <span class="tag">Web开发</span><span class="tag">学习笔记</span>
+                    </p>
+                </header>
+
+                <div class="article-body">
+<h2>前端基础</h2>
+<h3>HTML5 新特性</h3>
+<p>HTML5 引入了许多新的语义化标签：</p>
+<ul>
+<li><code>&lt;header&gt;</code> - 页面头部</li>
+<li><code>&lt;nav&gt;</code> - 导航栏</li>
+<li><code>&lt;main&gt;</code> - 主要内容</li>
+<li><code>&lt;article&gt;</code> - 文章内容</li>
+<li><code>&lt;footer&gt;</code> - 页面底部</li>
+</ul>
+<h3>CSS 最佳实践</h3>
+<pre><code class="language-css">/* 使用CSS变量 */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+</code></pre>
+<h3>JavaScript ES6+</h3>
+<p>现代JavaScript的一些重要特性：</p>
+<ol>
+<li><strong>箭头函数</strong></li>
+<li><strong>解构赋值</strong></li>
+<li><strong>Promise 和 async/await</strong></li>
+<li><strong>模块化</strong></li>
+</ol>
+<pre><code class="language-javascript">// 箭头函数
+const add = (a, b) =&gt; a + b;
+
+// 解构赋值
+const { name, age } = person;
+
+// async/await
+async function fetchData() {
+    const response = await fetch(&#39;/api/data&#39;);
+    const data = await response.json();
+    return data;
+}
+</code></pre>
+<h2>开发工具</h2>
+<ul>
+<li><strong>VSCode</strong> - 强大的代码编辑器</li>
+<li><strong>Chrome DevTools</strong> - 调试利器</li>
+<li><strong>Git</strong> - 版本控制</li>
+</ul>
+<h2>学习资源</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/">MDN Web Docs</a></li>
+<li><a href="https://javascript.info/">JavaScript.info</a></li>
+<li><a href="https://css-tricks.com/">CSS-Tricks</a></li>
+</ul>
+<p>持续学习，不断进步！</p>
+
+                </div>
+
+                <div class="article-footer">
+                    <div class="like-section">
+                        <button class="like-button" onclick="toggleLike('web-dev-notes')" aria-label="点赞">
+                            <span class="like-icon">👍</span>
+                            <span class="like-count" id="like-count">0</span>
+                        </button>
+                    </div>
+                    <a href="../index.html" class="back-link">← 返回首页</a>
+                </div>
+
+                <div class="comments-section">
+                    <h3>💬 评论</h3>
+                    <div id="giscus-container"></div>
+
+                    <!-- Giscus 评论系统
+                    注意：首次使用需要配置 giscus-config.js
+                    配置完成后，取消下方注释并替换配置参数
+
+                    <script src="https://giscus.app/client.js"
+                        data-repo=""
+                        data-repo-id=""
+                        data-category=""
+                        data-category-id=""
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="top"
+                        data-theme="light"
+                        data-lang="zh-CN"
+                        data-loading="lazy"
+                        crossorigin="anonymous"
+                        async>
+                    </script>
+                    -->
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // 页面加载时应用保存的主题
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
+        // 点赞功能
+        function toggleLike(articleSlug) {
+            const likes = JSON.parse(localStorage.getItem('blog_likes') || '{}');
+            const isLiked = likes[articleSlug];
+            likes[articleSlug] = !isLiked;
+            localStorage.setItem('blog_likes', JSON.stringify(likes));
+            updateLikeCount(articleSlug);
+        }
+
+        function updateLikeCount(articleSlug) {
+            const likes = JSON.parse(localStorage.getItem('blog_likes') || '{}');
+            const count = likes[articleSlug] ? 1 : 0;
+            const countElement = document.getElementById('like-count');
+            if (countElement) {
+                countElement.textContent = count;
+            }
+
+            // 更新按钮样式
+            const button = document.querySelector('.like-button');
+            if (button) {
+                if (likes[articleSlug]) {
+                    button.classList.add('liked');
+                } else {
+                    button.classList.remove('liked');
+                }
+            }
+        }
+
+        // 页面加载时更新点赞数
+        (function() {
+            updateLikeCount('web-dev-notes');
+        })();
+
+        // Giscus 主题同步（如果启用了 Giscus）
+        function updateGiscusTheme() {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (iframe) {
+                const isDark = document.body.classList.contains('dark-mode');
+                iframe.contentWindow.postMessage({
+                    giscus: {
+                        setConfig: {
+                            theme: isDark ? 'dark' : 'light'
+                        }
+                    }
+                }, 'https://giscus.app');
+            }
+        }
+
+        // 在主题切换时同步 Giscus 主题（通过事件监听而非覆盖函数）
+        const themeToggleBtn = document.querySelector('.theme-toggle');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                setTimeout(updateGiscusTheme, 100);
+            });
+        }
+        
+        // 代码块复制功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('pre');
+            
+            codeBlocks.forEach(function(block) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                
+                const button = document.createElement('button');
+                button.className = 'copy-code-btn';
+                button.innerHTML = '📋 复制';
+                button.setAttribute('aria-label', '复制代码');
+                
+                button.addEventListener('click', function() {
+                    const code = block.querySelector('code') || block;
+                    const text = code.textContent;
+                    
+                    navigator.clipboard.writeText(text).then(function() {
+                        button.innerHTML = '✅ 已复制!';
+                        button.classList.add('copied');
+                        
+                        setTimeout(function() {
+                            button.innerHTML = '📋 复制';
+                            button.classList.remove('copied');
+                        }, 2000);
+                    }).catch(function(err) {
+                        console.error('复制失败:', err);
+                        button.innerHTML = '❌ 复制失败';
+                    });
+                });
+                
+                block.parentNode.insertBefore(wrapper, block);
+                wrapper.appendChild(button);
+                wrapper.appendChild(block);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# 云服务器部署配置
+# 替换 your-domain.com 为你的域名
+
+your-domain.com {
+    root * /var/www/blog
+    file_server
+    encode gzip
+
+    # 开启HTTPS (Caddy自动申请Let's Encrypt证书)
+    tls {
+        protocols tls1.2 tls1.3
+    }
+
+    # 安全头
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

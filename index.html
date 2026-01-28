@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人博客</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS订阅" href="/feed.xml">
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
+
+    <!-- 注意：在添加此按钮后，需要在 body 标签下方的所有内容之前插入它 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">My Blog</h1>
+            <nav class="nav">
+                <a href="#" class="active">首页</a>
+                <a href="#articles">文章</a>
+                <a href="#about">关于</a>
+                <a href="/feed.xml" class="rss-link" title="RSS订阅">📡</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <h2>欢迎来到我的博客</h2>
+                <p>分享技术，记录生活</p>
+            </div>
+        </section>
+
+        <section id="articles" class="articles">
+            <div class="container">
+                <h2 class="section-title">最新文章</h2>
+                
+                <!-- 搜索框 -->
+                <div id="search" class="search-container"></div>
+                
+                <div class="article-list">
+                    <!-- AUTO-ARTICLE-LIST:START -->
+                    <article class="article-card">
+                        <h3><a href="articles/我的第一篇博客.html">我的第一篇博客</a></h3>
+                        <p class="article-meta">
+                            <span class="date">2026-01-04</span>
+                            <span class="tag">随笔</span><span class="tag">首发</span>
+                        </p>
+                        <p class="article-excerpt">记录博客搭建的过程和初衷，分享给同样热爱技术的你。</p>
+                        <a href="articles/我的第一篇博客.html" class="read-more">阅读全文 →</a>
+                    </article>
+
+                    <article class="article-card">
+                        <h3><a href="articles/learning-notes.html">编程学习心得</a></h3>
+                        <p class="article-meta">
+                            <span class="date">2026-01-03</span>
+                            <span class="tag">学习方法</span><span class="tag">编程</span>
+                        </p>
+                        <p class="article-excerpt">分享我在编程学习过程中总结的方法和经验。</p>
+                        <a href="articles/learning-notes.html" class="read-more">阅读全文 →</a>
+                    </article>
+
+                    <article class="article-card">
+                        <h3><a href="articles/web-dev-notes.html">Web开发学习笔记</a></h3>
+                        <p class="article-meta">
+                            <span class="date">2026-01-02</span>
+                            <span class="tag">Web开发</span><span class="tag">学习笔记</span>
+                        </p>
+                        <p class="article-excerpt">整理Web开发过程中的重要知识点和最佳实践。</p>
+                        <a href="articles/web-dev-notes.html" class="read-more">阅读全文 →</a>
+                    </article>
+
+                    <article class="article-card">
+                        <h3><a href="articles/hello-world.html">Hello World</a></h3>
+                        <p class="article-meta">
+                            <span class="date">2026-01-01</span>
+                            <span class="tag">技术</span><span class="tag">入门</span>
+                        </p>
+                        <p class="article-excerpt">欢迎来到我的博客！这是第一篇测试文章。</p>
+                        <a href="articles/hello-world.html" class="read-more">阅读全文 →</a>
+                    </article>
+                    <!-- AUTO-ARTICLE-LIST:END -->
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2 class="section-title">关于我</h2>
+                <div class="about-content">
+                    <p>你好！我是一名热爱技术和生活的开发者。这个博客用来记录我的学习心得、生活感悟和技术分享。</p>
+                    <p>欢迎来到我的小站，希望这里的内容对你有所帮助。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // 页面加载时应用保存的主题
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    
+    <!-- Pagefind 搜索 -->
+    <script src="js/search.js"></script>
+    
+    <!-- 标签筛选 -->
+    <script src="js/tag-filter.js"></script>
+</body>
+</html>

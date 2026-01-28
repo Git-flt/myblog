@@ -1,0 +1,24 @@
+{
+  "name": "myblog",
+  "version": "1.0.0",
+  "description": "个人博客 - Markdown转HTML工具",
+  "scripts": {
+    "publish": "node publish.js",
+    "serve": "node server.js",
+    "build:search": "npx pagefind --source . --bundle-dir _pagefind",
+    "build": "npm run publish && npm run build:search",
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "format": "prettier --write \"**/*.{js,json,css,md}\"",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "marked": "^9.1.6",
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "pagefind": "^1.0.4"
+  }
+}
