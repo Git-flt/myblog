@@ -45,15 +45,82 @@ function estimateReadingTime(content) {
 /**
  * HTML 模板
  */
-function getHtmlTemplate(title, date, tags, content, slug, readingTime) {
+function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt = '') {
     const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
+    const articleUrl = `${siteUrl}/articles/${slug}.html`;
+    const description = excerpt || `${title} - My Blog 技术博客`;
+    const keywords = tags.join(', ');
+    const author = 'My Blog'; // 可自定义作者名
+    
+    // 提取第一张图片作为Open Graph图片（如果有）
+    const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
+    const ogImage = imgMatch ? imgMatch[1] : `${siteUrl}/images/default-og.png`;
 
     return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
+    <title>${title} - My Blog</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="${escapeHtml(description)}">
+    <meta name="keywords" content="${escapeHtml(keywords)}">
+    <meta name="author" content="${author}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="${articleUrl}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${articleUrl}">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(description)}">
+    <meta property="og:image" content="${ogImage}">
+    <meta property="og:site_name" content="My Blog">
+    <meta property="article:published_time" content="${new Date(date).toISOString()}">
+    <meta property="article:author" content="${author}">
+    ${tags.map(tag => `<meta property="article:tag" content="${escapeHtml(tag)}">`).join('\n    ')}
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="${articleUrl}">
+    <meta name="twitter:title" content="${escapeHtml(title)}">
+    <meta name="twitter:description" content="${escapeHtml(description)}">
+    <meta name="twitter:image" content="${ogImage}">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "${escapeJson(title)}",
+      "image": "${ogImage}",
+      "datePublished": "${new Date(date).toISOString()}",
+      "dateModified": "${new Date(date).toISOString()}",
+      "author": {
+        "@type": "Person",
+        "name": "${author}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "My Blog",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "${siteUrl}/images/logo.png"
+        }
+      },
+      "description": "${escapeJson(description)}",
+      "keywords": "${escapeJson(keywords)}",
+      "articleBody": "${escapeJson(content.replace(/<[^>]*>/g, '').substring(0, 500))}",
+      "url": "${articleUrl}",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "${articleUrl}"
+      }
+    }
+    </script>
+    
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body data-pagefind-body>
@@ -249,7 +316,7 @@ ${content}
  * 生成 RSS Feed
  */
 function generateRSS(articles) {
-    const siteUrl = 'https://yourdomain.com'; // 请修改为你的域名
+    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
     const siteTitle = 'My Blog';
     const siteDescription = '个人技术博客';
     
@@ -288,6 +355,45 @@ ${rssItems}
 }
 
 /**
+ * 生成 Sitemap.xml
+ */
+function generateSitemap(articles) {
+    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
+    
+    // 首页
+    const homepageUrl = `  <url>
+    <loc>${siteUrl}/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>`;
+    
+    // 文章页面
+    const articleUrls = articles.map(article => {
+        const slug = path.basename(article.filename, '.html');
+        const link = `${siteUrl}/articles/${slug}.html`;
+        const lastmod = new Date(article.date).toISOString().split('T')[0];
+        
+        return `  <url>
+    <loc>${link}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    }).join('\n');
+    
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${homepageUrl}
+${articleUrls}
+</urlset>`;
+    
+    const sitemapPath = path.join(__dirname, 'sitemap.xml');
+    fs.writeFileSync(sitemapPath, sitemap);
+    console.log('✅ Sitemap 已生成: sitemap.xml');
+}
+
+/**
  * XML 转义函数
  */
 function escapeXml(str) {
@@ -297,6 +403,30 @@ function escapeXml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&apos;');
+}
+
+/**
+ * HTML 转义函数
+ */
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+/**
+ * JSON 转义函数
+ */
+function escapeJson(str) {
+    return str
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t');
 }
 
 /**
@@ -435,6 +565,7 @@ function main() {
     if (articles.length > 0) {
         updateIndexHtml(articles);
         generateRSS(articles);
+        generateSitemap(articles);
     }
 
     console.log('');

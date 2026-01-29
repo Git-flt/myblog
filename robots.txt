@@ -1,0 +1,43 @@
+# robots.txt - 搜索引擎爬虫规则
+# 了解更多: https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+
+# 允许所有搜索引擎爬取
+# 主要搜索引擎
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# AI 搜索引擎
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# 禁止爬取的目录（如果有）
+Disallow: /drafts/
+Disallow: /*.json$
+Disallow: /node_modules/
+
+# 站点地图位置
+Sitemap: https://git-flt.github.io/myblog/sitemap.xml

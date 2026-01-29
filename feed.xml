@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>My Blog</title>
-    <link>https://yourdomain.com</link>
+    <link>https://git-flt.github.io/myblog</link>
     <description>个人技术博客</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 28 Jan 2026 10:26:31 GMT</lastBuildDate>
-    <atom:link href="https://yourdomain.com/feed.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 Jan 2026 02:53:18 GMT</lastBuildDate>
+    <atom:link href="https://git-flt.github.io/myblog/feed.xml" rel="self" type="application/rss+xml" />
 
     <item>
       <title>我的第一篇博客</title>
-      <link>https://yourdomain.com/articles/我的第一篇博客.html</link>
-      <guid>https://yourdomain.com/articles/我的第一篇博客.html</guid>
+      <link>https://git-flt.github.io/myblog/articles/我的第一篇博客.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/我的第一篇博客.html</guid>
       <pubDate>Sun, 04 Jan 2026 00:00:00 GMT</pubDate>
       <description>记录博客搭建的过程和初衷，分享给同样热爱技术的你。</description>
       <category>随笔</category>
@@ -20,8 +20,8 @@
 
     <item>
       <title>编程学习心得</title>
-      <link>https://yourdomain.com/articles/learning-notes.html</link>
-      <guid>https://yourdomain.com/articles/learning-notes.html</guid>
+      <link>https://git-flt.github.io/myblog/articles/learning-notes.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/learning-notes.html</guid>
       <pubDate>Sat, 03 Jan 2026 00:00:00 GMT</pubDate>
       <description>分享我在编程学习过程中总结的方法和经验。</description>
       <category>学习方法</category>
@@ -30,8 +30,8 @@
 
     <item>
       <title>Web开发学习笔记</title>
-      <link>https://yourdomain.com/articles/web-dev-notes.html</link>
-      <guid>https://yourdomain.com/articles/web-dev-notes.html</guid>
+      <link>https://git-flt.github.io/myblog/articles/web-dev-notes.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/web-dev-notes.html</guid>
       <pubDate>Fri, 02 Jan 2026 00:00:00 GMT</pubDate>
       <description>整理Web开发过程中的重要知识点和最佳实践。</description>
       <category>Web开发</category>
@@ -40,8 +40,8 @@
 
     <item>
       <title>Hello World</title>
-      <link>https://yourdomain.com/articles/hello-world.html</link>
-      <guid>https://yourdomain.com/articles/hello-world.html</guid>
+      <link>https://git-flt.github.io/myblog/articles/hello-world.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/hello-world.html</guid>
       <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
       <description>欢迎来到我的博客！这是第一篇测试文章。</description>
       <category>技术</category>
