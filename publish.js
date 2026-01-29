@@ -49,9 +49,9 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
     const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
     const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
     const articleUrl = `${siteUrl}/articles/${slug}.html`;
-    const description = excerpt || `${title} - My Blog 技术博客`;
+    const description = excerpt || `${title} - King of Fish 科技博客`;
     const keywords = tags.join(', ');
-    const author = 'My Blog'; // 可自定义作者名
+    const author = 'King of Fish'; // 博客作者名
     
     // 提取第一张图片作为Open Graph图片（如果有）
     const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
@@ -128,7 +128,7 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
 
     <header class="header">
         <div class="container">
-            <h1 class="logo"><a href="../index.html">My Blog</a></h1>
+            <h1 class="logo"><a href="../index.html">King of Fish 🐠</a></h1>
             <nav class="nav">
                 <a href="../index.html">首页</a>
                 <a href="../index.html#articles">文章</a>
@@ -317,8 +317,8 @@ ${content}
  */
 function generateRSS(articles) {
     const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
-    const siteTitle = 'My Blog';
-    const siteDescription = '个人技术博客';
+    const siteTitle = 'King of Fish';
+    const siteDescription = 'AI前沿技术、生物科技、科技数码、健康养生等多元化内容分享';
     
     const rssItems = articles.map(article => {
         const slug = path.basename(article.filename, '.html');
