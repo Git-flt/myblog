@@ -154,11 +154,19 @@ ${content}
                 </div>
 
                 <div class="article-footer">
-                    <div class="like-section">
+                    <div class="article-stats">
+                        <span class="views-count">👁️ 阅读 <span id="busuanzi_value_page_pv">-</span></span>
                         <button class="like-button" onclick="toggleLike('${slug}')" aria-label="点赞">
                             <span class="like-icon">👍</span>
                             <span class="like-count" id="like-count">0</span>
                         </button>
+                    </div>
+                    <div class="share-section">
+                        <span class="share-label">分享：</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${articleUrl}" target="_blank" rel="noopener">📘</a>
+                        <a href="https://twitter.com/intent/tweet?url=${articleUrl}&text=${escapeHtml(title)}" target="_blank" rel="noopener">🐦</a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${articleUrl}&title=${escapeHtml(title)}" target="_blank" rel="noopener">💼</a>
+                        <a href="https://service.weibo.com/share/share.php?url=${articleUrl}&title=${escapeHtml(title)}" target="_blank" rel="noopener">📱</a>
                     </div>
                     <a href="../index.html" class="back-link">← 返回首页</a>
                 </div>
@@ -192,8 +200,15 @@ ${content}
     <footer class="footer">
         <div class="container">
             <p>&copy; ${new Date().getFullYear()} My Blog. All rights reserved.</p>
+            <p class="footer-stats">
+                <span id="busuanzi_container_site_pv">总访问 <span id="busuanzi_value_site_pv">-</span></span>
+                <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv">-</span></span>
+            </p>
         </div>
     </footer>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <script>
         // 主题切换功能

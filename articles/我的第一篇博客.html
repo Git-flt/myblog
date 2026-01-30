@@ -114,11 +114,19 @@
                 </div>
 
                 <div class="article-footer">
-                    <div class="like-section">
+                    <div class="article-stats">
+                        <span class="views-count">👁️ 阅读 <span id="busuanzi_value_page_pv">-</span></span>
                         <button class="like-button" onclick="toggleLike('我的第一篇博客')" aria-label="点赞">
                             <span class="like-icon">👍</span>
                             <span class="like-count" id="like-count">0</span>
                         </button>
+                    </div>
+                    <div class="share-section">
+                        <span class="share-label">分享：</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://git-flt.github.io/myblog/articles/我的第一篇博客.html" target="_blank" rel="noopener">📘</a>
+                        <a href="https://twitter.com/intent/tweet?url=https://git-flt.github.io/myblog/articles/我的第一篇博客.html&text=我的第一篇博客" target="_blank" rel="noopener">🐦</a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://git-flt.github.io/myblog/articles/我的第一篇博客.html&title=我的第一篇博客" target="_blank" rel="noopener">💼</a>
+                        <a href="https://service.weibo.com/share/share.php?url=https://git-flt.github.io/myblog/articles/我的第一篇博客.html&title=我的第一篇博客" target="_blank" rel="noopener">📱</a>
                     </div>
                     <a href="../index.html" class="back-link">← 返回首页</a>
                 </div>
@@ -152,8 +160,15 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 My Blog. All rights reserved.</p>
+            <p class="footer-stats">
+                <span id="busuanzi_container_site_pv">总访问 <span id="busuanzi_value_site_pv">-</span></span>
+                <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv">-</span></span>
+            </p>
         </div>
     </footer>
+
+    <!-- 不蒜子统计 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <script>
         // 主题切换功能
