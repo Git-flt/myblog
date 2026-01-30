@@ -62,7 +62,7 @@ function testHtmlContent() {
 
     const indexHtml = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
 
-    test('index.html 包含标题', indexHtml.includes('<title>我的个人博客</title>'));
+    test('index.html 包含标题', indexHtml.includes('<title>King of Fish - 科技前沿与生活探索</title>'));
     test('index.html 包含导航', indexHtml.includes('class="nav"'));
     test('index.html 包含文章列表', indexHtml.includes('class="article-list"'));
     test('index.html 包含关于 section', indexHtml.includes('id="about"'));

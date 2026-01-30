@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My Blog</title>
+    <title>King of Fish</title>
     <link>https://git-flt.github.io/myblog</link>
-    <description>个人技术博客</description>
+    <description>AI前沿技术、生物科技、科技数码、健康养生等多元化内容分享</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 29 Jan 2026 03:00:43 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 30 Jan 2026 12:53:55 GMT</lastBuildDate>
     <atom:link href="https://git-flt.github.io/myblog/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>一条龙虾，如何掀翻AI圈的桌子</title>
+      <link>https://git-flt.github.io/myblog/articles/openclaw-king-of-fish.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/openclaw-king-of-fish.html</guid>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 GMT</pubDate>
+      <description>一条龙虾，如何掀翻AI圈的桌子</description>
+      <category>未分类</category>
+    </item>
+
+    <item>
+      <title>2026年1月AI前沿汇总：科研写作、算力平台与AI能源</title>
+      <link>https://git-flt.github.io/myblog/articles/2026-01-ai-frontier.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/2026-01-ai-frontier.html</guid>
+      <pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate>
+      <description>用通俗语言盘点2026年1月AI前沿：科研写作AI、新一代算力平台、AI能源，以及教育场景的Gemini应用。</description>
+      <category>AI技术</category>
+      <category>AI前沿</category>
+      <category>大模型应用</category>
+      <category>算力基础设施</category>
+      <category>科技趋势</category>
+    </item>
 
     <item>
       <title>我的第一篇博客</title>
@@ -36,16 +58,6 @@
       <description>整理Web开发过程中的重要知识点和最佳实践。</description>
       <category>Web开发</category>
       <category>学习笔记</category>
-    </item>
-
-    <item>
-      <title>Hello World</title>
-      <link>https://git-flt.github.io/myblog/articles/hello-world.html</link>
-      <guid>https://git-flt.github.io/myblog/articles/hello-world.html</guid>
-      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
-      <description>欢迎来到我的博客！这是第一篇测试文章。</description>
-      <category>技术</category>
-      <category>入门</category>
     </item>
   </channel>
 </rss>
