@@ -281,6 +281,34 @@ a:hover {
     line-height: 1.6;
 }
 
+/* Table Styles */
+.article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.article-body table th,
+.article-body table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid var(--border-color);
+}
+
+.article-body table th {
+    background: var(--bg-color);
+    font-weight: 600;
+}
+
+.article-body table tr:nth-child(even) {
+    background: var(--bg-color);
+}
+
+.article-body table tr:hover {
+    background: rgba(52, 152, 219, 0.1);
+}
+
 /* Tag Filter */
 .tag-filter {
     display: flex;
