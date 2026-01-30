@@ -5,8 +5,21 @@
     <link>https://git-flt.github.io/myblog</link>
     <description>AI前沿技术、生物科技、科技数码、健康养生等多元化内容分享</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 30 Jan 2026 13:14:28 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 30 Jan 2026 13:23:00 GMT</lastBuildDate>
     <atom:link href="https://git-flt.github.io/myblog/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>一条龙虾，如何掀翻AI圈的桌子</title>
+      <link>https://git-flt.github.io/myblog/articles/openclaw-king-of-fish.html</link>
+      <guid>https://git-flt.github.io/myblog/articles/openclaw-king-of-fish.html</guid>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 GMT</pubDate>
+      <description>一条开源的&quot;本地AI代理&quot;如何搅动AI圈？OpenClaw从改名到爆火，分析其背后的逻辑与风险。</description>
+      <category>AI技术</category>
+      <category>科技趋势</category>
+      <category>开源项目</category>
+      <category>AI代理</category>
+      <category>个人AI</category>
+    </item>
 
     <item>
       <title>2026年1月AI前沿汇总：科研写作、算力平台与AI能源</title>

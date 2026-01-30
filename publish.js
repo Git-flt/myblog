@@ -504,7 +504,15 @@ function convertFile(mdPath) {
         month: '2-digit',
         day: '2-digit'
     }).replace(/\//g, '-');
-    const tags = data.tags || ['未分类'];
+    // 处理 tags：支持数组或逗号分隔的字符串
+    let tags = ['未分类'];
+    if (data.tags) {
+        if (Array.isArray(data.tags)) {
+            tags = data.tags;
+        } else if (typeof data.tags === 'string') {
+            tags = data.tags.split(',').map(t => t.trim()).filter(t => t);
+        }
+    }
     const excerpt = data.excerpt || '';
     const slug = data.slug || baseName;
 
