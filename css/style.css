@@ -875,3 +875,31 @@ body.dark-mode .article-body code {
     background: var(--white);
     color: var(--text-color);
 }
+
+
+/* Reading experience enhancer */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, #ffd166, #06d6a0);
+    z-index: 9999;
+    transition: width .1s linear;
+}
+
+.back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    color: #fff;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    display: none;
+}

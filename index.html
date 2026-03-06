@@ -45,6 +45,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS订阅" href="/feed.xml">
 </head>
 <body>
+    <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
 
     <!-- 注意：在添加此按钮后，需要在 body 标签下方的所有内容之前插入它 -->
@@ -198,5 +199,8 @@
 
     <!-- 文章排序 -->
     <script src="js/article-controls.js"></script>
+
+    <!-- 阅读体验增强 -->
+    <script src="js/reading-experience.js"></script>
 </body>
 </html>
