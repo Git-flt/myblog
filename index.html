@@ -99,10 +99,14 @@
                         <option value="date-asc">最早优先</option>
                         <option value="title-asc">标题 A-Z</option>
                     </select>
+                    <div class="view-toggle" role="group" aria-label="文章视图切换">
+                        <button type="button" class="view-toggle-btn active" data-view="list" aria-controls="article-list" aria-pressed="true">列表</button>
+                        <button type="button" class="view-toggle-btn" data-view="grid" aria-controls="article-list" aria-pressed="false">网格</button>
+                    </div>
                     <span id="article-count" class="article-count" aria-live="polite"></span>
                 </div>
 
-                <div class="article-list">
+                <div id="article-list" class="article-list view-list">
                     <!-- AUTO-ARTICLE-LIST:START -->
                     <article class="article-card">
                         <h3><a href="articles/openclaw-king-of-fish.html">一条龙虾，如何掀翻AI圈的桌子</a></h3>
@@ -200,6 +204,7 @@
 
     <!-- 文章排序 -->
     <script src="js/article-controls.js"></script>
+    <script src="js/home-view-toggle.js"></script>
     <script src="js/home-insights.js"></script>
 
     <!-- 阅读体验增强 -->

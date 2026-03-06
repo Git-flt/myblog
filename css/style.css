@@ -163,6 +163,12 @@ a:hover {
     gap: 25px;
 }
 
+.article-list.view-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
 .article-card {
     background: var(--white);
     padding: 30px;
@@ -861,6 +867,7 @@ body.dark-mode .article-body code {
     align-items: center;
     gap: 10px;
     margin: 0 0 16px;
+    flex-wrap: wrap;
 }
 
 .article-toolbar label {
@@ -874,6 +881,37 @@ body.dark-mode .article-body code {
     border: 1px solid var(--border-color);
     background: var(--white);
     color: var(--text-color);
+}
+
+.view-toggle {
+    display: inline-flex;
+    margin-left: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.view-toggle-btn {
+    border: 0;
+    background: var(--white);
+    color: var(--text-light);
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.view-toggle-btn + .view-toggle-btn {
+    border-left: 1px solid var(--border-color);
+}
+
+.view-toggle-btn.active,
+.view-toggle-btn[aria-pressed='true'] {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.view-toggle-btn:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: -2px;
 }
 
 
@@ -905,11 +943,16 @@ body.dark-mode .article-body code {
 }
 
 .article-count {
-    margin-left: auto;
     font-size: 0.86rem;
     color: var(--text-light);
     background: var(--bg-color);
     border: 1px solid var(--border-color);
     border-radius: 999px;
     padding: 5px 10px;
+}
+
+@media (max-width: 768px) {
+    .view-toggle {
+        margin-left: 0;
+    }
 }
