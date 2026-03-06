@@ -6,28 +6,30 @@
 }
 
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    --text-color: #333;
-    --text-light: #666;
-    --bg-color: #f8f9fa;
-    --white: #fff;
-    --border-color: #e1e4e8;
-    --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --primary-color: #2b2141;
+    --secondary-color: #7c5cff;
+    --accent-color: #ffcc66;
+    --text-color: #2f2a3e;
+    --text-light: #6b6480;
+    --bg-color: #f6f2e8;
+    --white: #fffdf8;
+    --border-color: #ded4c4;
+    --shadow: 0 2px 12px rgba(43, 33, 65, 0.08);
+    --shadow-hover: 0 6px 24px rgba(43, 33, 65, 0.14);
 }
 
 /* 深色模式变量 */
 body.dark-mode {
-    --primary-color: #ecf0f1;
-    --secondary-color: #3498db;
-    --text-color: #ecf0f1;
-    --text-light: #bdc3c7;
-    --bg-color: #2c3e50;
-    --white: #34495e;
-    --border-color: #4a5f75;
-    --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --primary-color: #f4edff;
+    --secondary-color: #8ea2ff;
+    --accent-color: #ffd166;
+    --text-color: #efe9ff;
+    --text-light: #b8acd4;
+    --bg-color: #1f1731;
+    --white: #2d2247;
+    --border-color: #463765;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.45);
 }
 
 body {
@@ -125,10 +127,13 @@ a:hover {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--white);
+    background:
+        linear-gradient(135deg, rgba(43,33,65,.95), rgba(124,92,255,.92)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 8px, rgba(255,255,255,0) 8px 16px);
+    color: #fff;
     padding: 80px 0;
     text-align: center;
+    border-bottom: 4px solid rgba(255, 204, 102, .55);
 }
 
 .hero h2 {
@@ -954,5 +959,48 @@ body.dark-mode .article-body code {
 @media (max-width: 768px) {
     .view-toggle {
         margin-left: 0;
+    }
+}
+
+
+.projects {
+    padding: 20px 0 60px;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.project-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.project-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.project-card p {
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.project-card ul {
+    margin-left: 18px;
+}
+
+.project-card li {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+    .project-grid {
+        grid-template-columns: 1fr;
     }
 }

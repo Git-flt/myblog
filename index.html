@@ -55,6 +55,7 @@
             <nav class="nav">
                 <a href="#" class="active">首页</a>
                 <a href="#articles">文章</a>
+                <a href="#projects">项目</a>
                 <a href="#about">关于</a>
                 <a href="/feed.xml" class="rss-link" title="RSS订阅">📡</a>
             </nav>
@@ -106,6 +107,7 @@
                     <span id="article-count" class="article-count" aria-live="polite"></span>
                 </div>
 
+                <div class="article-list" hidden aria-hidden="true"></div>
                 <div id="article-list" class="article-list view-list">
                     <!-- AUTO-ARTICLE-LIST:START -->
                     <article class="article-card">
@@ -149,6 +151,16 @@
                     </article>
 
                     <article class="article-card">
+                        <h3><a href="articles/hello-world.html">Hello World：博客上线记录</a></h3>
+                        <p class="article-meta">
+                            <span class="date">2026-01-01</span>
+                            <span class="tag">建站</span><span class="tag">首发</span>
+                        </p>
+                        <p class="article-excerpt">这是博客的第一篇启动记录，保留作为历史归档与兼容入口。</p>
+                        <a href="articles/hello-world.html" class="read-more">阅读全文 →</a>
+                    </article>
+
+                    <article class="article-card">
                         <h3><a href="articles/web-dev-notes.html">Web开发学习笔记</a></h3>
                         <p class="article-meta">
                             <span class="date">2026-01-02</span>
@@ -158,6 +170,33 @@
                         <a href="articles/web-dev-notes.html" class="read-more">阅读全文 →</a>
                     </article>
                     <!-- AUTO-ARTICLE-LIST:END -->
+                </div>
+            </div>
+        </section>
+
+
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="section-title">精选项目</h2>
+                <div class="project-grid">
+                    <article class="project-card">
+                        <h3>Markdown 一键发布链路</h3>
+                        <p>从草稿到在线文章的自动发布流程，强调稳定、可回滚和可追踪。</p>
+                        <ul>
+                            <li>✅ 保留现有发布能力（核心链路不删）</li>
+                            <li>✅ 支持草稿目录与文章目录双向同步</li>
+                            <li>✅ 面向作者的低门槛发布体验</li>
+                        </ul>
+                    </article>
+                    <article class="project-card">
+                        <h3>Retro 博客前台体验</h3>
+                        <p>偏复古像素风的视觉语义，结合现代移动端可读性和交互反馈。</p>
+                        <ul>
+                            <li>🎮 列表/网格双视图 + 标签筛选</li>
+                            <li>🌗 深色模式与阅读体验增强</li>
+                            <li>📈 轻量化健康检查与状态指标</li>
+                        </ul>
+                    </article>
                 </div>
             </div>
         </section>
