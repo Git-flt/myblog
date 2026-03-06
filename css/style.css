@@ -903,3 +903,13 @@ body.dark-mode .article-body code {
     cursor: pointer;
     display: none;
 }
+
+.article-count {
+    margin-left: auto;
+    font-size: 0.86rem;
+    color: var(--text-light);
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 5px 10px;
+}
