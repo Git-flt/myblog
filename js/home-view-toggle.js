@@ -22,7 +22,7 @@
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const list = document.querySelector('.article-list');
+    const list = document.getElementById('article-list');
     const buttons = Array.from(document.querySelectorAll('.view-toggle-btn'));
     if (!list || buttons.length === 0) return;
 

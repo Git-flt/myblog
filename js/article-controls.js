@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const sortSelect = document.getElementById('article-sort');
-  const list = document.querySelector('.article-list');
+  const list = document.getElementById('article-list');
   if (!sortSelect || !list) return;
 
   sortSelect.addEventListener('change', () => {

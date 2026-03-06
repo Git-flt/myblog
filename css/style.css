@@ -1004,3 +1004,66 @@ body.dark-mode .article-body code {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Retro polish v2 */
+.header {
+    border-bottom: 3px solid color-mix(in srgb, var(--accent-color) 65%, transparent);
+}
+
+.logo {
+    letter-spacing: 0.04em;
+    text-shadow: 1px 1px 0 rgba(255, 204, 102, 0.35);
+}
+
+.article-card {
+    border: 1px solid color-mix(in srgb, var(--secondary-color) 18%, var(--border-color));
+}
+
+.article-card h3 a {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--secondary-color) 45%, transparent);
+}
+
+.article-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+}
+
+.article-body blockquote {
+    border-left: 4px solid var(--accent-color);
+    background: color-mix(in srgb, var(--bg-color) 72%, var(--white));
+    padding: 12px 14px;
+    border-radius: 8px;
+}
+
+.article-body h2,
+.article-body h3 {
+    scroll-margin-top: 80px;
+}
+
+@media (max-width: 768px) {
+    .header .container {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .nav {
+        flex-wrap: wrap;
+        gap: 10px 14px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

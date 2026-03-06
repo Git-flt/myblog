@@ -1,6 +1,6 @@
 (function () {
   const countEl = document.getElementById('article-count');
-  const list = document.querySelector('.article-list');
+  const list = document.getElementById('article-list');
   if (!countEl || !list) return;
 
   const update = () => {
