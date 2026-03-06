@@ -45,7 +45,7 @@ function estimateReadingTime(content) {
 /**
  * HTML 模板
  */
-function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt = '') {
+function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt = '', coverImage = '') {
     const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
     const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
     const articleUrl = `${siteUrl}/articles/${slug}.html`;
@@ -55,7 +55,7 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
     
     // 提取第一张图片作为Open Graph图片（如果有）
     const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
-    const ogImage = imgMatch ? imgMatch[1] : `${siteUrl}/images/default-og.png`;
+    const ogImage = coverImage || (imgMatch ? imgMatch[1] : `${siteUrl}/images/default-og.png`);
 
     return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -163,10 +163,18 @@ ${content}
                     </div>
                     <div class="share-section">
                         <span class="share-label">分享：</span>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=${articleUrl}" target="_blank" rel="noopener">📘</a>
-                        <a href="https://twitter.com/intent/tweet?url=${articleUrl}&text=${escapeHtml(title)}" target="_blank" rel="noopener">🐦</a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${articleUrl}&title=${escapeHtml(title)}" target="_blank" rel="noopener">💼</a>
-                        <a href="https://service.weibo.com/share/share.php?url=${articleUrl}&title=${escapeHtml(title)}" target="_blank" rel="noopener">📱</a>
+                        <a class="share-btn" href="https://x.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(title)}" target="_blank" rel="noopener noreferrer">X</a>
+                        <a class="share-btn" href="https://www.reddit.com/submit?url=${encodeURIComponent(articleUrl)}&title=${encodeURIComponent(title)}" target="_blank" rel="noopener noreferrer">Reddit</a>
+                        <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a class="share-btn" href="https://service.weibo.com/share/share.php?url=${encodeURIComponent(articleUrl)}&title=${encodeURIComponent(title)}" target="_blank" rel="noopener noreferrer">微博</a>
+                        <a class="share-btn" href="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(articleUrl)}" target="_blank" rel="noopener noreferrer">微信</a>
+                        <a class="share-btn" href="https://www.toutiao.com/" target="_blank" rel="noopener noreferrer" title="打开头条发布入口后粘贴链接">头条</a>
+                        <a class="share-btn" href="../feed.xml" target="_blank" rel="noopener">RSS</a>
+                        <button type="button" class="share-btn share-btn-copy" onclick="copyArticleLink()">复制链接</button>
+                    </div>
+                    <div class="audio-read-section">
+                        <button type="button" class="audio-read-btn" onclick="toggleReadAloud()">🔊 朗读本文</button>
+                        <span class="audio-read-hint">支持浏览器语音朗读（中文优先）</span>
                     </div>
                     <a href="../index.html" class="back-link">← 返回首页</a>
                 </div>
@@ -280,6 +288,46 @@ ${content}
                     }
                 }, 'https://giscus.app');
             }
+        }
+
+        let currentUtterance = null;
+
+        function copyArticleLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('链接已复制，可以直接贴到微信/头条/社交平台。');
+            }).catch(() => {
+                window.prompt('复制失败，请手动复制链接：', url);
+            });
+        }
+
+        function toggleReadAloud() {
+            if (!('speechSynthesis' in window)) {
+                alert('当前浏览器不支持语音朗读。');
+                return;
+            }
+
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                currentUtterance = null;
+                return;
+            }
+
+            const articleBody = document.querySelector('.article-body');
+            if (!articleBody) return;
+
+            const text = articleBody.innerText.replace(/\s+/g, ' ').trim();
+            if (!text) return;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            currentUtterance = utterance;
+            utterance.onend = () => {
+                currentUtterance = null;
+            };
+            speechSynthesis.speak(utterance);
         }
 
         // 代码块复制功能
@@ -460,6 +508,9 @@ function updateIndexHtml(articles) {
     const newArticleList = articles.map(article => {
         const slug = path.basename(article.filename, '.html');
         return `                    <article class="article-card">
+                        <a href="articles/${slug}.html" class="article-cover-link" aria-label="${article.title}">
+                            <img class="article-cover" src="${article.coverImage || 'images/default-og.png'}" alt="${article.title} 缩略图" loading="lazy" decoding="async">
+                        </a>
                         <h3><a href="articles/${slug}.html">${article.title}</a></h3>
                         <p class="article-meta">
                             <span class="date">${article.date}</span>
@@ -518,12 +569,17 @@ function convertFile(mdPath) {
 
     // 转换为 HTML
     const htmlContent = marked.parse(markdown);
+
+    // 缩略图：优先 frontmatter.cover，其次正文第一张图片，最后默认图
+    const markdownImgMatch = markdown.match(/!\[[^\]]*\]\(([^)]+)\)/);
+    const htmlImgMatch = htmlContent.match(/<img[^>]+src="([^">]+)"/);
+    const coverImage = data.cover || (markdownImgMatch ? markdownImgMatch[1] : '') || (htmlImgMatch ? htmlImgMatch[1] : '') || 'images/default-og.png';
     
     // 计算阅读时长
     const readingTime = estimateReadingTime(htmlContent);
 
     // 生成完整 HTML
-    const fullHtml = getHtmlTemplate(title, date, tags, htmlContent, slug, readingTime);
+    const fullHtml = getHtmlTemplate(title, date, tags, htmlContent, slug, readingTime, excerpt, coverImage);
 
     // 保存 HTML 文件
     const htmlPath = path.join(ARTICLES_DIR, `${slug}.html`);
@@ -536,7 +592,8 @@ function convertFile(mdPath) {
             title,
             date,
             tags,
-            excerpt
+            excerpt,
+            coverImage
         };
     } catch (error) {
         console.error(`❌ 转换失败: ${filename} - ${error.message}`);
