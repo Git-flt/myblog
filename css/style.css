@@ -854,3 +854,24 @@ body.dark-mode .article-body code {
         grid-template-columns: 1fr;
     }
 }
+
+
+.article-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+}
+
+.article-toolbar label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.article-toolbar select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--white);
+    color: var(--text-color);
+}

@@ -91,6 +91,15 @@
                     <a class="featured-item" href="#articles"><span>🎮</span><strong>数码生活</strong><em>效率、游戏与家庭科技</em></a>
                 </section>
                 
+                <div class="article-toolbar" role="region" aria-label="文章排序与筛选">
+                    <label for="article-sort">排序</label>
+                    <select id="article-sort">
+                        <option value="date-desc">最新优先</option>
+                        <option value="date-asc">最早优先</option>
+                        <option value="title-asc">标题 A-Z</option>
+                    </select>
+                </div>
+
                 <div class="article-list">
                     <!-- AUTO-ARTICLE-LIST:START -->
                     <article class="article-card">
@@ -186,5 +195,8 @@
     
     <!-- 标签筛选 -->
     <script src="js/tag-filter.js"></script>
+
+    <!-- 文章排序 -->
+    <script src="js/article-controls.js"></script>
 </body>
 </html>
