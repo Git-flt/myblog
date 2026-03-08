@@ -132,6 +132,8 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
             <nav class="nav">
                 <a href="../index.html">首页</a>
                 <a href="../index.html#articles">文章</a>
+                <a href="../categories.html">分类</a>
+                <a href="../tags.html">标签</a>
                 <a href="../index.html#about">关于</a>
             </nav>
         </div>
@@ -413,6 +415,56 @@ ${rssItems}
   console.log('✅ RSS feed 已生成: feed.xml');
 }
 
+
+/**
+ * 生成分类/标签索引页
+ */
+function generateTaxonomyPages(articles) {
+  const categories = new Map();
+  const tagsMap = new Map();
+
+  articles.forEach(article => {
+    const category = article.category || '未分类';
+    if (!categories.has(category)) categories.set(category, []);
+    categories.get(category).push(article);
+
+    (article.tags || []).forEach(tag => {
+      if (!tagsMap.has(tag)) tagsMap.set(tag, []);
+      tagsMap.get(tag).push(article);
+    });
+  });
+
+  const categoryCards = Array.from(categories.entries())
+    .sort((a, b) => b[1].length - a[1].length)
+    .map(([name, list]) => {
+      const links = list.slice(0, 8).map(a => {
+        const slug = path.basename(a.filename, '.html');
+        return `<li><a href="articles/${slug}.html">${escapeHtml(a.title)}</a></li>`;
+      }).join('');
+      return `<article class="article-card"><h3>${escapeHtml(name)} <small>(${list.length})</small></h3><ul>${links}</ul></article>`;
+    }).join('');
+
+  const tagCards = Array.from(tagsMap.entries())
+    .sort((a, b) => b[1].length - a[1].length)
+    .map(([name, list]) => {
+      const links = list.slice(0, 6).map(a => {
+        const slug = path.basename(a.filename, '.html');
+        return `<li><a href="articles/${slug}.html">${escapeHtml(a.title)}</a></li>`;
+      }).join('');
+      return `<article class="article-card"><h3># ${escapeHtml(name)} <small>(${list.length})</small></h3><ul>${links}</ul></article>`;
+    }).join('');
+
+  const baseHead = '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="css/style.css">';
+
+  const categoriesHtml = `<!DOCTYPE html><html lang="zh-CN"><head>${baseHead}<title>分类索引 - King of Fish</title></head><body><header class="header"><div class="container"><h1 class="logo"><a href="index.html">King of Fish 🐠</a></h1><nav class="nav"><a href="index.html">首页</a><a href="categories.html" class="active">分类</a><a href="tags.html">标签</a></nav></div></header><main class="main"><section class="articles"><div class="container"><h2 class="section-title">分类索引</h2><div class="article-list view-grid">${categoryCards}</div></div></section></main></body></html>`;
+
+  const tagsHtml = `<!DOCTYPE html><html lang="zh-CN"><head>${baseHead}<title>标签索引 - King of Fish</title></head><body><header class="header"><div class="container"><h1 class="logo"><a href="index.html">King of Fish 🐠</a></h1><nav class="nav"><a href="index.html">首页</a><a href="categories.html">分类</a><a href="tags.html" class="active">标签</a></nav></div></header><main class="main"><section class="articles"><div class="container"><h2 class="section-title">标签索引</h2><div class="article-list view-grid">${tagCards}</div></div></section></main></body></html>`;
+
+  fs.writeFileSync(path.join(__dirname, 'categories.html'), categoriesHtml);
+  fs.writeFileSync(path.join(__dirname, 'tags.html'), tagsHtml);
+  console.log('✅ 分类与标签索引页已生成: categories.html / tags.html');
+}
+
 /**
  * 生成 Sitemap.xml
  */
@@ -444,6 +496,18 @@ function generateSitemap(articles) {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${homepageUrl}
+  <url>
+    <loc>${siteUrl}/categories.html</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}/tags.html</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
 ${articleUrls}
 </urlset>`;
     
@@ -566,6 +630,9 @@ function convertFile(mdPath) {
     }
     const excerpt = data.excerpt || '';
     const slug = data.slug || baseName;
+    const category = (typeof data.category === 'string' && data.category.trim())
+      ? data.category.trim()
+      : (tags[0] || '未分类');
 
     // 转换为 HTML
     const htmlContent = marked.parse(markdown);
@@ -593,7 +660,8 @@ function convertFile(mdPath) {
       date,
       tags,
       excerpt,
-      coverImage
+      coverImage,
+      category
     };
   } catch (error) {
     console.error(`❌ 转换失败: ${filename} - ${error.message}`);
@@ -641,6 +709,7 @@ function main() {
   if (articles.length > 0) {
     updateIndexHtml(articles);
     generateRSS(articles);
+    generateTaxonomyPages(articles);
     generateSitemap(articles);
   }
 
