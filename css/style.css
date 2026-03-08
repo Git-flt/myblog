@@ -176,7 +176,7 @@ a:hover {
 
 .article-card {
     background: var(--white);
-    padding: 30px;
+    padding: 22px;
     border-radius: 12px;
     box-shadow: var(--shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -226,8 +226,12 @@ a:hover {
 
 .article-excerpt {
     color: var(--text-light);
-    margin-bottom: 15px;
-    line-height: 1.7;
+    margin-bottom: 12px;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .read-more {
@@ -1324,4 +1328,11 @@ body.dark-mode .article-body code {
     color: var(--primary-color);
     background: color-mix(in srgb, var(--accent-color) 38%, var(--white));
     border: 1px solid color-mix(in srgb, var(--accent-color) 60%, var(--border-color));
+}
+
+
+@media (max-width: 768px) {
+    .article-card {
+        padding: 16px;
+    }
 }
