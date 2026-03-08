@@ -1298,3 +1298,17 @@ body.dark-mode .article-body code {
         display: none;
     }
 }
+
+
+.toc-link {
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.heading-anchor-target {
+    transition: background-color .35s ease;
+}
+
+.heading-anchor-target.is-focused {
+    background: color-mix(in srgb, var(--accent-color) 18%, transparent);
+    border-radius: 6px;
+}
