@@ -343,10 +343,12 @@ ${content}
         document.addEventListener('DOMContentLoaded', function() {
             const codeBlocks = document.querySelectorAll('pre');
 
-            // 自动目录（h2/h3）+ 标题锚点
+            // 自动目录（h2/h3）+ 标题锚点 + 当前章节高亮
             const tocBox = document.getElementById('articleToc');
             const tocList = document.getElementById('tocList');
             const headings = Array.from(document.querySelectorAll('.article-body h2, .article-body h3'));
+            let tocLinks = [];
+
             if (tocBox && tocList && headings.length > 0) {
                 const links = headings.map((h, i) => {
                     const slug = (h.textContent || ('section-' + i))
@@ -357,13 +359,14 @@ ${content}
                     const id = h.id || ('sec-' + i + '-' + slug);
                     h.id = id;
                     h.classList.add('heading-anchor-target');
-                    return '<a class="toc-link toc-' + h.tagName.toLowerCase() + '" href="#' + id + '">' + h.textContent + '</a>';
+                    return '<a class="toc-link toc-' + h.tagName.toLowerCase() + '" data-target="' + id + '" href="#' + id + '">' + h.textContent + '</a>';
                 }).join('');
                 tocList.innerHTML = links;
                 tocBox.hidden = false;
+                tocLinks = Array.from(tocList.querySelectorAll('.toc-link'));
             }
 
-            // 阅读进度 + 回到顶部
+            // 阅读进度 + 回到顶部 + TOC高亮
             const progress = document.getElementById('readingProgress');
             const backBtn = document.getElementById('backToTop');
             const onScroll = function() {
@@ -372,6 +375,22 @@ ${content}
                 const ratio = total > 0 ? (h.scrollTop / total) : 0;
                 if (progress) progress.style.width = String(Math.min(100, Math.max(0, ratio * 100))) + '%';
                 if (backBtn) backBtn.style.display = h.scrollTop > 320 ? 'inline-flex' : 'none';
+
+                if (tocLinks.length > 0 && headings.length > 0) {
+                    const offset = 110;
+                    let currentId = headings[0].id;
+                    headings.forEach(hd => {
+                        const top = hd.getBoundingClientRect().top;
+                        if (top <= offset) currentId = hd.id;
+                    });
+                    tocLinks.forEach(link => {
+                        if (link.dataset.target === currentId) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }
             };
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();

@@ -1202,3 +1202,41 @@ body.dark-mode .article-body code {
         grid-template-columns: 1fr;
     }
 }
+
+
+.article-toc {
+    margin: 16px 0 20px;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--white) 82%, var(--bg-color));
+}
+
+.article-toc h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.article-toc nav {
+    display: grid;
+    gap: 6px;
+}
+
+.toc-link {
+    color: var(--text-light);
+    font-size: 0.92rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.toc-link.toc-h3 {
+    margin-left: 14px;
+    font-size: 0.88rem;
+}
+
+.toc-link.active {
+    background: color-mix(in srgb, var(--secondary-color) 18%, transparent);
+    color: var(--primary-color);
+    font-weight: 600;
+}
