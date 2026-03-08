@@ -98,12 +98,16 @@
                     </p>
                 </header>
 
-                <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
-                    <h3>目录</h3>
-                    <nav id="tocList"></nav>
-                </aside>
+                <div class="article-layout">
+                    <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
+                        <div class="article-toc-head">
+                            <h3>目录</h3>
+                            <button type="button" id="tocToggle" class="toc-toggle" aria-expanded="true" aria-controls="tocList">收起</button>
+                        </div>
+                        <nav id="tocList"></nav>
+                    </aside>
 
-                <div class="article-body">
+                    <div class="article-body">
 <p>这是一篇给“非技术读者也能看懂”的AI月度速览。你可以把它当作：AI从“模型更聪明”转向“更好用、更能规模化落地”的一个月度样本。</p>
 <h2>1. 科研写作进入“一体化工作台”时代</h2>
 <p>OpenAI 发布了 Prism：把写论文、协作、引用管理和AI推理放到同一个工作台里。它的核心变化是：AI不再只是“聊天窗口”，而是嵌进论文结构中，能理解整篇文档（包含公式、引用、图表等），直接参与修改与排版。官方说它是一个免费的、LaTeX 原生的科学写作与协作空间，内置 GPT‑5.2，并向所有 ChatGPT 个人账号开放。</p>
@@ -130,6 +134,7 @@
 <li>Google：Gemini 与 Khan Academy 合作 <a href="https://blog.google/products-and-platforms/products/education/khan-academy-partnership/">https://blog.google/products-and-platforms/products/education/khan-academy-partnership/</a></li>
 </ul>
 
+                    </div>
                 </div>
 
                 <div class="article-footer">
@@ -334,6 +339,27 @@
                 tocList.innerHTML = links;
                 tocBox.hidden = false;
                 tocLinks = Array.from(tocList.querySelectorAll('.toc-link'));
+
+                const tocToggle = document.getElementById('tocToggle');
+                const setTocCollapsed = function(collapsed) {
+                    tocBox.classList.toggle('collapsed', collapsed);
+                    tocList.hidden = collapsed;
+                    if (tocToggle) {
+                        tocToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                        tocToggle.textContent = collapsed ? '展开' : '收起';
+                    }
+                };
+
+                if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+                    setTocCollapsed(true);
+                }
+
+                if (tocToggle) {
+                    tocToggle.addEventListener('click', function() {
+                        const collapsed = tocBox.classList.contains('collapsed');
+                        setTocCollapsed(!collapsed);
+                    });
+                }
             }
 
             // 阅读进度 + 回到顶部 + TOC高亮

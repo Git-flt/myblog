@@ -153,13 +153,18 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
                     </p>
                 </header>
 
-                <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
-                    <h3>目录</h3>
-                    <nav id="tocList"></nav>
-                </aside>
+                <div class="article-layout">
+                    <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
+                        <div class="article-toc-head">
+                            <h3>目录</h3>
+                            <button type="button" id="tocToggle" class="toc-toggle" aria-expanded="true" aria-controls="tocList">收起</button>
+                        </div>
+                        <nav id="tocList"></nav>
+                    </aside>
 
-                <div class="article-body">
+                    <div class="article-body">
 ${content}
+                    </div>
                 </div>
 
                 <div class="article-footer">
@@ -364,6 +369,27 @@ ${content}
                 tocList.innerHTML = links;
                 tocBox.hidden = false;
                 tocLinks = Array.from(tocList.querySelectorAll('.toc-link'));
+
+                const tocToggle = document.getElementById('tocToggle');
+                const setTocCollapsed = function(collapsed) {
+                    tocBox.classList.toggle('collapsed', collapsed);
+                    tocList.hidden = collapsed;
+                    if (tocToggle) {
+                        tocToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                        tocToggle.textContent = collapsed ? '展开' : '收起';
+                    }
+                };
+
+                if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+                    setTocCollapsed(true);
+                }
+
+                if (tocToggle) {
+                    tocToggle.addEventListener('click', function() {
+                        const collapsed = tocBox.classList.contains('collapsed');
+                        setTocCollapsed(!collapsed);
+                    });
+                }
             }
 
             // 阅读进度 + 回到顶部 + TOC高亮

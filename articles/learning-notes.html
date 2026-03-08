@@ -95,12 +95,16 @@
                     </p>
                 </header>
 
-                <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
-                    <h3>目录</h3>
-                    <nav id="tocList"></nav>
-                </aside>
+                <div class="article-layout">
+                    <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
+                        <div class="article-toc-head">
+                            <h3>目录</h3>
+                            <button type="button" id="tocToggle" class="toc-toggle" aria-expanded="true" aria-controls="tocList">收起</button>
+                        </div>
+                        <nav id="tocList"></nav>
+                    </aside>
 
-                <div class="article-body">
+                    <div class="article-body">
 <h2>学习方法论</h2>
 <h3>费曼学习法</h3>
 <blockquote>
@@ -168,6 +172,7 @@ function processData(data) {
 <p>学习是一个持续的过程，关键是找到适合自己的方法并坚持下去。</p>
 <p><strong>记住</strong>：今天的你要比昨天的你更好一点！</p>
 
+                    </div>
                 </div>
 
                 <div class="article-footer">
@@ -372,6 +377,27 @@ function processData(data) {
                 tocList.innerHTML = links;
                 tocBox.hidden = false;
                 tocLinks = Array.from(tocList.querySelectorAll('.toc-link'));
+
+                const tocToggle = document.getElementById('tocToggle');
+                const setTocCollapsed = function(collapsed) {
+                    tocBox.classList.toggle('collapsed', collapsed);
+                    tocList.hidden = collapsed;
+                    if (tocToggle) {
+                        tocToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                        tocToggle.textContent = collapsed ? '展开' : '收起';
+                    }
+                };
+
+                if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+                    setTocCollapsed(true);
+                }
+
+                if (tocToggle) {
+                    tocToggle.addEventListener('click', function() {
+                        const collapsed = tocBox.classList.contains('collapsed');
+                        setTocCollapsed(!collapsed);
+                    });
+                }
             }
 
             // 阅读进度 + 回到顶部 + TOC高亮
