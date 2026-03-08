@@ -1312,3 +1312,16 @@ body.dark-mode .article-body code {
     background: color-mix(in srgb, var(--accent-color) 18%, transparent);
     border-radius: 6px;
 }
+
+
+.category-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: color-mix(in srgb, var(--accent-color) 38%, var(--white));
+    border: 1px solid color-mix(in srgb, var(--accent-color) 60%, var(--border-color));
+}

@@ -694,7 +694,9 @@ function updateIndexHtml(articles) {
                         </a>
                         <h3><a href="articles/${slug}.html">${article.title}</a></h3>
                         <p class="article-meta">
+                            <span class="category-pill">${article.category || '未分类'}</span>
                             <span class="date">${article.date}</span>
+                            <span class="reading-time">⏱️ ${article.readingTime || 1} 分钟</span>
                             ${article.tags.map(t => `<span class="tag">${t}</span>`).join('')}
                         </p>
                         <p class="article-excerpt">${article.excerpt}</p>
@@ -778,7 +780,8 @@ function convertFile(mdPath) {
       tags,
       excerpt,
       coverImage,
-      category
+      category,
+      readingTime
     };
   } catch (error) {
     console.error(`❌ 转换失败: ${filename} - ${error.message}`);
