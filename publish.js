@@ -124,6 +124,8 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body data-pagefind-body>
+    <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">↑</button>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
 
     <header class="header">
@@ -150,6 +152,11 @@ function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt 
                         ${tagsHtml}
                     </p>
                 </header>
+
+                <aside class="article-toc" id="articleToc" aria-label="文章目录" hidden>
+                    <h3>目录</h3>
+                    <nav id="tocList"></nav>
+                </aside>
 
                 <div class="article-body">
 ${content}
@@ -332,9 +339,47 @@ ${content}
             speechSynthesis.speak(utterance);
         }
 
-        // 代码块复制功能
+        // 代码块复制功能 + 目录/阅读体验增强
         document.addEventListener('DOMContentLoaded', function() {
             const codeBlocks = document.querySelectorAll('pre');
+
+            // 自动目录（h2/h3）+ 标题锚点
+            const tocBox = document.getElementById('articleToc');
+            const tocList = document.getElementById('tocList');
+            const headings = Array.from(document.querySelectorAll('.article-body h2, .article-body h3'));
+            if (tocBox && tocList && headings.length > 0) {
+                const links = headings.map((h, i) => {
+                    const slug = (h.textContent || ('section-' + i))
+                      .toLowerCase()
+                      .trim()
+                      .replace(/[^一-龥A-Za-z0-9_ -]/g, '')
+                      .replace(/ +/g, '-');
+                    const id = h.id || ('sec-' + i + '-' + slug);
+                    h.id = id;
+                    h.classList.add('heading-anchor-target');
+                    return '<a class="toc-link toc-' + h.tagName.toLowerCase() + '" href="#' + id + '">' + h.textContent + '</a>';
+                }).join('');
+                tocList.innerHTML = links;
+                tocBox.hidden = false;
+            }
+
+            // 阅读进度 + 回到顶部
+            const progress = document.getElementById('readingProgress');
+            const backBtn = document.getElementById('backToTop');
+            const onScroll = function() {
+                const h = document.documentElement;
+                const total = h.scrollHeight - h.clientHeight;
+                const ratio = total > 0 ? (h.scrollTop / total) : 0;
+                if (progress) progress.style.width = String(Math.min(100, Math.max(0, ratio * 100))) + '%';
+                if (backBtn) backBtn.style.display = h.scrollTop > 320 ? 'inline-flex' : 'none';
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+            if (backBtn) {
+              backBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+            }
             
             codeBlocks.forEach(function(block) {
                 const wrapper = document.createElement('div');
