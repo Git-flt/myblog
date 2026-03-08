@@ -5,7 +5,7 @@
   "scripts": {
     "publish": "node publish.js",
     "serve": "node server.js",
-    "build:search": "npx pagefind --source . --bundle-dir _pagefind",
+    "build:search": "npx pagefind --site . --output-subdir _pagefind",
     "build": "npm run publish && npm run build:search",
     "lint": "eslint *.js",
     "lint:fix": "eslint *.js --fix",

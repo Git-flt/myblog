@@ -18,46 +18,46 @@ if (!fs.existsSync(ARTICLES_DIR)) fs.mkdirSync(ARTICLES_DIR, { recursive: true }
 
 // 配置 marked
 marked.setOptions({
-    gfm: true,
-    breaks: true
+  gfm: true,
+  breaks: true
 });
 
 /**
  * 估算阅读时长
  */
 function estimateReadingTime(content) {
-    // 移除HTML标签
-    const text = content.replace(/<[^>]*>/g, '');
+  // 移除HTML标签
+  const text = content.replace(/<[^>]*>/g, '');
     
-    // 中文字符数（粗略估计）
-    const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+  // 中文字符数（粗略估计）
+  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
     
-    // 英文单词数
-    const englishWords = (text.match(/[a-zA-Z]+/g) || []).length;
+  // 英文单词数
+  const englishWords = (text.match(/[a-zA-Z]+/g) || []).length;
     
-    // 中文阅读速度约 300-400 字/分钟，取 350
-    // 英文阅读速度约 200-250 词/分钟，取 225
-    const minutes = Math.ceil((chineseChars / 350) + (englishWords / 225));
+  // 中文阅读速度约 300-400 字/分钟，取 350
+  // 英文阅读速度约 200-250 词/分钟，取 225
+  const minutes = Math.ceil((chineseChars / 350) + (englishWords / 225));
     
-    return minutes || 1; // 至少1分钟
+  return minutes || 1; // 至少1分钟
 }
 
 /**
  * HTML 模板
  */
 function getHtmlTemplate(title, date, tags, content, slug, readingTime, excerpt = '', coverImage = '') {
-    const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
-    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
-    const articleUrl = `${siteUrl}/articles/${slug}.html`;
-    const description = excerpt || `${title} - King of Fish 科技博客`;
-    const keywords = tags.join(', ');
-    const author = 'King of Fish'; // 博客作者名
+  const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+  const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
+  const articleUrl = `${siteUrl}/articles/${slug}.html`;
+  const description = excerpt || `${title} - King of Fish 科技博客`;
+  const keywords = tags.join(', ');
+  const author = 'King of Fish'; // 博客作者名
     
-    // 提取第一张图片作为Open Graph图片（如果有）
-    const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
-    const ogImage = coverImage || (imgMatch ? imgMatch[1] : `${siteUrl}/images/default-og.png`);
+  // 提取第一张图片作为Open Graph图片（如果有）
+  const imgMatch = content.match(/<img[^>]+src="([^">]+)"/);
+  const ogImage = coverImage || (imgMatch ? imgMatch[1] : `${siteUrl}/images/default-og.png`);
 
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -316,7 +316,7 @@ ${content}
             const articleBody = document.querySelector('.article-body');
             if (!articleBody) return;
 
-            const text = articleBody.innerText.replace(/\s+/g, ' ').trim();
+            const text = articleBody.innerText.replace(/\\s+/g, ' ').trim();
             if (!text) return;
 
             const utterance = new SpeechSynthesisUtterance(text);
@@ -375,16 +375,16 @@ ${content}
  * 生成 RSS Feed
  */
 function generateRSS(articles) {
-    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
-    const siteTitle = 'King of Fish';
-    const siteDescription = 'AI前沿技术、生物科技、科技数码、健康养生等多元化内容分享';
+  const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
+  const siteTitle = 'King of Fish';
+  const siteDescription = 'AI前沿技术、生物科技、科技数码、健康养生等多元化内容分享';
     
-    const rssItems = articles.map(article => {
-        const slug = path.basename(article.filename, '.html');
-        const link = `${siteUrl}/articles/${slug}.html`;
-        const pubDate = new Date(article.date).toUTCString();
+  const rssItems = articles.map(article => {
+    const slug = path.basename(article.filename, '.html');
+    const link = `${siteUrl}/articles/${slug}.html`;
+    const pubDate = new Date(article.date).toUTCString();
         
-        return `    <item>
+    return `    <item>
       <title>${escapeXml(article.title)}</title>
       <link>${link}</link>
       <guid>${link}</guid>
@@ -392,9 +392,9 @@ function generateRSS(articles) {
       <description>${escapeXml(article.excerpt || article.title)}</description>
       ${article.tags.map(tag => `<category>${escapeXml(tag)}</category>`).join('\n      ')}
     </item>`;
-    }).join('\n\n');
+  }).join('\n\n');
     
-    const rss = `<?xml version="1.0" encoding="UTF-8"?>
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(siteTitle)}</title>
@@ -408,106 +408,106 @@ ${rssItems}
   </channel>
 </rss>`;
     
-    const rssPath = path.join(__dirname, 'feed.xml');
-    fs.writeFileSync(rssPath, rss);
-    console.log('✅ RSS feed 已生成: feed.xml');
+  const rssPath = path.join(__dirname, 'feed.xml');
+  fs.writeFileSync(rssPath, rss);
+  console.log('✅ RSS feed 已生成: feed.xml');
 }
 
 /**
  * 生成 Sitemap.xml
  */
 function generateSitemap(articles) {
-    const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
+  const siteUrl = 'https://git-flt.github.io/myblog'; // GitHub Pages 域名
     
-    // 首页
-    const homepageUrl = `  <url>
+  // 首页
+  const homepageUrl = `  <url>
     <loc>${siteUrl}/</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>`;
     
-    // 文章页面
-    const articleUrls = articles.map(article => {
-        const slug = path.basename(article.filename, '.html');
-        const link = `${siteUrl}/articles/${slug}.html`;
-        const lastmod = new Date(article.date).toISOString().split('T')[0];
+  // 文章页面
+  const articleUrls = articles.map(article => {
+    const slug = path.basename(article.filename, '.html');
+    const link = `${siteUrl}/articles/${slug}.html`;
+    const lastmod = new Date(article.date).toISOString().split('T')[0];
         
-        return `  <url>
+    return `  <url>
     <loc>${link}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`;
-    }).join('\n');
+  }).join('\n');
     
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${homepageUrl}
 ${articleUrls}
 </urlset>`;
     
-    const sitemapPath = path.join(__dirname, 'sitemap.xml');
-    fs.writeFileSync(sitemapPath, sitemap);
-    console.log('✅ Sitemap 已生成: sitemap.xml');
+  const sitemapPath = path.join(__dirname, 'sitemap.xml');
+  fs.writeFileSync(sitemapPath, sitemap);
+  console.log('✅ Sitemap 已生成: sitemap.xml');
 }
 
 /**
  * XML 转义函数
  */
 function escapeXml(str) {
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&apos;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 /**
  * HTML 转义函数
  */
 function escapeHtml(str) {
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
  * JSON 转义函数
  */
 function escapeJson(str) {
-    return str
-        .replace(/\\/g, '\\\\')
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/\t/g, '\\t');
+  return str
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
 }
 
 /**
  * 更新 index.html 文章列表
  */
 function updateIndexHtml(articles) {
-    const indexPath = path.join(__dirname, 'index.html');
-    let indexContent = fs.readFileSync(indexPath, 'utf8');
+  const indexPath = path.join(__dirname, 'index.html');
+  let indexContent = fs.readFileSync(indexPath, 'utf8');
 
-    // 使用标记替换
-    const startMarker = '<!-- AUTO-ARTICLE-LIST:START -->';
-    const endMarker = '<!-- AUTO-ARTICLE-LIST:END -->';
+  // 使用标记替换
+  const startMarker = '<!-- AUTO-ARTICLE-LIST:START -->';
+  const endMarker = '<!-- AUTO-ARTICLE-LIST:END -->';
 
-    if (!indexContent.includes(startMarker) || !indexContent.includes(endMarker)) {
-        console.log('⚠️  未找到文章列表标记，跳过更新');
-        return;
-    }
+  if (!indexContent.includes(startMarker) || !indexContent.includes(endMarker)) {
+    console.log('⚠️  未找到文章列表标记，跳过更新');
+    return;
+  }
 
-    // 生成新的文章列表
-    const newArticleList = articles.map(article => {
-        const slug = path.basename(article.filename, '.html');
-        return `                    <article class="article-card">
+  // 生成新的文章列表
+  const newArticleList = articles.map(article => {
+    const slug = path.basename(article.filename, '.html');
+    return `                    <article class="article-card">
                         <a href="articles/${slug}.html" class="article-cover-link" aria-label="${article.title}">
                             <img class="article-cover" src="${article.coverImage || 'images/default-og.png'}" alt="${article.title} 缩略图" loading="lazy" decoding="async">
                         </a>
@@ -519,50 +519,50 @@ function updateIndexHtml(articles) {
                         <p class="article-excerpt">${article.excerpt}</p>
                         <a href="articles/${slug}.html" class="read-more">阅读全文 →</a>
                     </article>`;
-    }).join('\n\n');
+  }).join('\n\n');
 
-    // 替换标记之间的内容
-    const newIndexContent = indexContent.replace(
-        new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`),
-        `${startMarker}\n${newArticleList}\n                    ${endMarker}`
-    );
+  // 替换标记之间的内容
+  const newIndexContent = indexContent.replace(
+    new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`),
+    `${startMarker}\n${newArticleList}\n                    ${endMarker}`
+  );
 
-    fs.writeFileSync(indexPath, newIndexContent);
-    console.log('✅ index.html 已更新');
+  fs.writeFileSync(indexPath, newIndexContent);
+  console.log('✅ index.html 已更新');
 }
 
 /**
  * 转换单个 markdown 文件
  */
 function convertFile(mdPath) {
-    const filename = path.basename(mdPath);
-    const baseName = path.basename(mdPath, '.md');
+  const filename = path.basename(mdPath);
+  const baseName = path.basename(mdPath, '.md');
 
-    // 跳过模板文件
-    if (baseName.includes('模板') || baseName.startsWith('.')) {
-        return null;
-    }
+  // 跳过模板文件
+  if (baseName.includes('模板') || baseName.startsWith('.')) {
+    return null;
+  }
 
-    try {
-        // 读取并解析 markdown
-        const content = fs.readFileSync(mdPath, 'utf8');
-        const { data, content: markdown } = matter(content);
+  try {
+    // 读取并解析 markdown
+    const content = fs.readFileSync(mdPath, 'utf8');
+    const { data, content: markdown } = matter(content);
 
     const title = data.title || baseName;
     const dateStr = data.date || new Date().toISOString().split('T')[0];
     const date = new Date(dateStr).toLocaleDateString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
     }).replace(/\//g, '-');
     // 处理 tags：支持数组或逗号分隔的字符串
     let tags = ['未分类'];
     if (data.tags) {
-        if (Array.isArray(data.tags)) {
-            tags = data.tags;
-        } else if (typeof data.tags === 'string') {
-            tags = data.tags.split(',').map(t => t.trim()).filter(t => t);
-        }
+      if (Array.isArray(data.tags)) {
+        tags = data.tags;
+      } else if (typeof data.tags === 'string') {
+        tags = data.tags.split(',').map(t => t.trim()).filter(t => t);
+      }
     }
     const excerpt = data.excerpt || '';
     const slug = data.slug || baseName;
@@ -585,76 +585,76 @@ function convertFile(mdPath) {
     const htmlPath = path.join(ARTICLES_DIR, `${slug}.html`);
     fs.writeFileSync(htmlPath, fullHtml);
 
-        console.log(`✅ ${filename} → ${slug}.html`);
+    console.log(`✅ ${filename} → ${slug}.html`);
 
-        return {
-            filename: `${slug}.html`,
-            title,
-            date,
-            tags,
-            excerpt,
-            coverImage
-        };
-    } catch (error) {
-        console.error(`❌ 转换失败: ${filename} - ${error.message}`);
-        return null;
-    }
+    return {
+      filename: `${slug}.html`,
+      title,
+      date,
+      tags,
+      excerpt,
+      coverImage
+    };
+  } catch (error) {
+    console.error(`❌ 转换失败: ${filename} - ${error.message}`);
+    return null;
+  }
 }
 
 /**
  * 主函数
  */
 function main() {
+  console.log('');
+  console.log('╔════════════════════════════════════════╗');
+  console.log('║      博客发布工具 - Markdown 转 HTML    ║');
+  console.log('╚════════════════════════════════════════╝');
+  console.log('');
+
+  // 获取所有 markdown 文件
+  const files = fs.readdirSync(DRAFTS_DIR)
+    .filter(f => f.endsWith('.md') && !f.startsWith('.'));
+
+  if (files.length === 0) {
+    console.log('📝 drafts 文件夹中没有 Markdown 文件');
     console.log('');
-    console.log('╔════════════════════════════════════════╗');
-    console.log('║      博客发布工具 - Markdown 转 HTML    ║');
-    console.log('╚════════════════════════════════════════╝');
-    console.log('');
+    return;
+  }
 
-    // 获取所有 markdown 文件
-    const files = fs.readdirSync(DRAFTS_DIR)
-        .filter(f => f.endsWith('.md') && !f.startsWith('.'));
+  console.log(`📄 找到 ${files.length} 个待转换的文件`);
+  console.log('');
 
-    if (files.length === 0) {
-        console.log('📝 drafts 文件夹中没有 Markdown 文件');
-        console.log('');
-        return;
-    }
+  // 转换所有文件
+  const articles = [];
+  files.forEach(file => {
+    const mdPath = path.join(DRAFTS_DIR, file);
+    const result = convertFile(mdPath);
+    if (result) articles.push(result);
+  });
 
-    console.log(`📄 找到 ${files.length} 个待转换的文件`);
-    console.log('');
+  console.log('');
 
-    // 转换所有文件
-    const articles = [];
-    files.forEach(file => {
-        const mdPath = path.join(DRAFTS_DIR, file);
-        const result = convertFile(mdPath);
-        if (result) articles.push(result);
-    });
+  // 按日期排序
+  articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    console.log('');
+  // 更新 index.html
+  if (articles.length > 0) {
+    updateIndexHtml(articles);
+    generateRSS(articles);
+    generateSitemap(articles);
+  }
 
-    // 按日期排序
-    articles.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // 更新 index.html
-    if (articles.length > 0) {
-        updateIndexHtml(articles);
-        generateRSS(articles);
-        generateSitemap(articles);
-    }
-
-    console.log('');
-    console.log('════════════════════════════════════════');
-    console.log('  发布完成!')
-    console.log(`  转换文章: ${articles.length} 篇`)
-    console.log('════════════════════════════════════════');
-    console.log('');
-    console.log('💡 提示:');
-    console.log('   - 查看生成的 HTML: articles/');
-    console.log('   - 测试运行: npm run serve');
-    console.log('   - 部署到服务器: ./deploy.sh');
-    console.log('');
+  console.log('');
+  console.log('════════════════════════════════════════');
+  console.log('  发布完成!');
+  console.log(`  转换文章: ${articles.length} 篇`);
+  console.log('════════════════════════════════════════');
+  console.log('');
+  console.log('💡 提示:');
+  console.log('   - 查看生成的 HTML: articles/');
+  console.log('   - 测试运行: npm run serve');
+  console.log('   - 部署到服务器: ./deploy.sh');
+  console.log('');
 }
 
 main();

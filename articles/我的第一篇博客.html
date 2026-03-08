@@ -276,7 +276,7 @@
             const articleBody = document.querySelector('.article-body');
             if (!articleBody) return;
 
-            const text = articleBody.innerText.replace(/s+/g, ' ').trim();
+            const text = articleBody.innerText.replace(/\s+/g, ' ').trim();
             if (!text) return;
 
             const utterance = new SpeechSynthesisUtterance(text);
