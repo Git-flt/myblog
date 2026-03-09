@@ -10,7 +10,8 @@
     "lint": "eslint *.js",
     "lint:fix": "eslint *.js --fix",
     "format": "prettier --write \"**/*.{js,json,css,md}\"",
-    "test": "node test.js"
+    "test": "node test.js",
+    "verify": "bash ./scripts/verify.sh"
   },
   "dependencies": {
     "marked": "^9.1.6",
