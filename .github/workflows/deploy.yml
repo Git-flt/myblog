@@ -34,8 +34,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm test
+      - name: Test (strict http)
+        run: |
+          node server.js &
+          SERVER_PID=$!
+          sleep 2
+          STRICT_HTTP=1 npm test
+          kill $SERVER_PID
 
       - name: Build site
         run: npm run build
