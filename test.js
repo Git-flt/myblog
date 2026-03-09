@@ -9,6 +9,7 @@ const path = require('path');
 
 const BASE_URL = 'http://localhost:8080';
 const PROJECT_ROOT = path.join(__dirname);
+const STRICT_HTTP = process.env.STRICT_HTTP === '1';
 
 // 颜色输出
 const colors = {
@@ -146,7 +147,13 @@ function testHttpServer() {
           if (serverOk) {
             log('✓ HTTP服务器测试全部通过', 'green');
           } else {
-            log('✗ HTTP服务器测试部分失败 (请确保Nginx已启动)', 'yellow');
+            const msg = '✗ HTTP服务器测试部分失败 (请确保Nginx已启动)';
+            if (STRICT_HTTP) {
+              log(msg + ' [STRICT_HTTP=1]', 'red');
+              failed++;
+            } else {
+              log(msg + ' [non-strict]', 'yellow');
+            }
           }
           resolve();
         }
@@ -154,7 +161,16 @@ function testHttpServer() {
         log(`✗ HTTP ${url} - 连接失败: ${err.message}`, 'red');
         serverOk = false;
         completed++;
-        if (completed === testUrls.length) resolve();
+        if (completed === testUrls.length) {
+          const msg = '✗ HTTP服务器测试部分失败 (请确保Nginx已启动)';
+          if (STRICT_HTTP) {
+            log(msg + ' [STRICT_HTTP=1]', 'red');
+            failed++;
+          } else {
+            log(msg + ' [non-strict]', 'yellow');
+          }
+          resolve();
+        }
       });
     });
   });
@@ -165,6 +181,7 @@ async function runTests() {
   log('='.repeat(50), 'cyan');
   log('  博客项目测试套件', 'cyan');
   log('='.repeat(50), 'cyan');
+  log(`  HTTP模式: ${STRICT_HTTP ? 'strict' : 'non-strict'}`, 'cyan');
 
   // 基础测试
   testFileStructure();
@@ -180,6 +197,7 @@ async function runTests() {
   log('\n' + '='.repeat(50), 'cyan');
   log(`  测试结果: ${passed} 通过, ${failed} 失败`, 'cyan');
   log('='.repeat(50), 'cyan');
+  log(`  HTTP模式: ${STRICT_HTTP ? 'strict' : 'non-strict'}`, 'cyan');
 
   process.exit(failed > 0 ? 1 : 0);
 }
