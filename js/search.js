@@ -31,6 +31,7 @@ async function initSearch() {
 function mountSearch() {
   const searchContainer = document.getElementById('search');
   if (searchContainer && window.PagefindUI) {
+    const initialQuery = readInitialQuery();
     new window.PagefindUI({
       element: '#search',
       showSubResults: true,
@@ -49,5 +50,45 @@ function mountSearch() {
         search_suggestion: '未找到 [SEARCH_TERM] 的相关结果。尝试以下搜索:',
       },
     });
+
+    bindSearchShortcut();
+    if (initialQuery) {
+      setTimeout(() => {
+        const input = document.querySelector('.pagefind-ui__search-input');
+        if (!input) return;
+        input.value = initialQuery;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }, 120);
+    }
   }
+}
+
+
+function focusSearchInput() {
+  const input = document.querySelector('.pagefind-ui__search-input');
+  if (input) {
+    input.focus();
+    input.select();
+  }
+}
+
+function readInitialQuery() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('q') || '';
+  } catch (_) {
+    return '';
+  }
+}
+
+function bindSearchShortcut() {
+  document.addEventListener('keydown', (event) => {
+    const target = event.target;
+    const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    if (typing) return;
+    if (event.key === '/') {
+      event.preventDefault();
+      focusSearchInput();
+    }
+  });
 }

@@ -1,0 +1,116 @@
+---
+import { url } from '../lib/posts';
+
+interface Props {
+  slug: string;
+  title: string;
+  articleUrl: string;
+  markdownUrl: string;
+}
+
+const { slug, title, articleUrl, markdownUrl } = Astro.props;
+const encodedUrl = encodeURIComponent(articleUrl);
+const encodedTitle = encodeURIComponent(title);
+
+const shareLinks = [
+  { label: 'X', href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}` },
+  { label: 'Reddit', href: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}` },
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
+  { label: '微博', href: `https://service.weibo.com/share/share.php?url=${encodedUrl}&title=${encodedTitle}` },
+  { label: '微信', href: `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodedUrl}` },
+];
+---
+
+<div class="article-footer">
+  <div class="article-stats">
+    <span class="views-count">👁️ 阅读 <span id="busuanzi_value_page_pv">-</span></span>
+    <button class="like-button" type="button" data-slug={slug} aria-label="点赞">
+      <span class="like-icon">👍</span>
+      <span class="like-count" id="like-count">0</span>
+    </button>
+  </div>
+
+  <div class="share-section">
+    <span class="share-label">分享：</span>
+    {shareLinks.map((link) => (
+      <a class="share-btn" href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+    ))}
+    <a class="share-btn" href={url('feed.xml')} target="_blank" rel="noopener">RSS</a>
+    <a class="share-btn" href={markdownUrl} target="_blank" rel="noopener" title="本文 Markdown 原文，便于 AI 与工具直接读取">Markdown</a>
+    <button type="button" class="share-btn share-btn-copy">复制链接</button>
+  </div>
+
+  <div class="audio-read-section">
+    <button type="button" class="audio-read-btn">🔊 朗读本文</button>
+    <span class="audio-read-hint">支持浏览器语音朗读（中文优先）</span>
+  </div>
+
+  <a href={url()} class="back-link">← 返回首页</a>
+</div>
+
+<script>
+  // 点赞（本地记录）
+  const likeButton = document.querySelector<HTMLButtonElement>('.like-button');
+  const likeCount = document.getElementById('like-count');
+
+  const readLikes = (): Record<string, boolean> => {
+    try {
+      return JSON.parse(localStorage.getItem('blog_likes') || '{}');
+    } catch (_) {
+      return {};
+    }
+  };
+
+  if (likeButton && likeCount) {
+    const slug = likeButton.dataset.slug ?? '';
+
+    const render = () => {
+      const liked = Boolean(readLikes()[slug]);
+      likeCount.textContent = liked ? '1' : '0';
+      likeButton.classList.toggle('liked', liked);
+    };
+
+    likeButton.addEventListener('click', () => {
+      const likes = readLikes();
+      likes[slug] = !likes[slug];
+      try {
+        localStorage.setItem('blog_likes', JSON.stringify(likes));
+      } catch (_) {
+        // 隐私模式下忽略
+      }
+      render();
+    });
+
+    render();
+  }
+
+  // 复制链接
+  document.querySelector('.share-btn-copy')?.addEventListener('click', async () => {
+    const link = window.location.href;
+    try {
+      await navigator.clipboard.writeText(link);
+      alert('链接已复制，可以直接贴到微信/头条/社交平台。');
+    } catch (_) {
+      window.prompt('复制失败，请手动复制链接：', link);
+    }
+  });
+
+  // 语音朗读
+  document.querySelector('.audio-read-btn')?.addEventListener('click', () => {
+    if (!('speechSynthesis' in window)) {
+      alert('当前浏览器不支持语音朗读。');
+      return;
+    }
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      return;
+    }
+    const body = document.querySelector<HTMLElement>('.article-body');
+    const text = body?.innerText.replace(/\s+/g, ' ').trim();
+    if (!text) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN';
+    speechSynthesis.speak(utterance);
+  });
+</script>

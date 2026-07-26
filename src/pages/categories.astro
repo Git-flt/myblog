@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCategoryCounts, getPublishedPosts, postUrl, url } from '../lib/posts';
+
+const categoryCounts = await getCategoryCounts();
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="分类导航" description="按分类浏览全部文章。">
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">📂 分类导航</h2>
+      <p class="page-intro">
+        细粒度归档。成体系的内容见 <a href={url('writing.html')}>全部文章</a>。
+      </p>
+
+      {categoryCounts.map(([category]) => (
+        <section class="topic-group">
+          <h3 class="section-title">{category}</h3>
+          <ul class="taxonomy-list">
+            {posts
+              .filter((post) => (post.data.category ?? '未分类') === category)
+              .map((post) => (
+                <li><a href={postUrl(post)}>{post.data.title}</a></li>
+              ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

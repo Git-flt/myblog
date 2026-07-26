@@ -1,326 +1,103 @@
-<<<<<<< HEAD
-# MyBlog - 多平台内容创作与发布系统
+# MyBlog
 
-一个现代化的个人博客系统，支持Markdown写作、深色模式、评论点赞系统，并可扩展多平台发布。
+个人技术写作站 —— **从运维视角看 AI 系统**。
 
-## ✨ 2026年标准功能
+基于 Astro 5 构建，按主题聚类组织内容，并提供面向大模型的机器可读层。
 
-### 🌓 深色模式
-- 完美支持深色/浅色主题切换
-- 自动保存用户偏好到本地存储
-- 页面加载时自动应用上次选择的主题
-- 平滑的过渡动画
+## 定位
 
-### 👍 点赞系统
-- 基于LocalStorage的轻量级点赞功能
-- 点赞状态持久化保存
-- 实时更新点赞计数
-- 精美的点赞按钮动画效果
+- **文字为主**：内容是 AI 系统的架构、可观测性、成本与故障模式，来自 20 余年 AIOps / 大数据一线经验
+- **更新节奏**：每月至少 2 篇
+- **内容红线**：AI 只做检索整理、结构建议、润色、摘要与配图；观点、判断、事实核查与方案验证由本人完成，不发布未经亲自验证的技术方案
 
-### 💬 评论系统（Giscus）
-- 基于GitHub Discussions的评论系统
-- 完全免费，无广告
-- 支持Markdown语法
-- 支持表情反应
-- 自动适配深色模式
-
-## 🚀 快速开始
-
-### 1. 安装依赖
+## 快速开始
 
 ```bash
-npm install
+npm ci
+npm run dev        # http://localhost:4321/myblog
+npm run build      # 构建 + 生成搜索索引，输出到 dist/
+npm run preview    # 预览构建产物
+npm run check      # 内容 schema 与类型校验
 ```
 
-### 2. 写作
+## 写作流程
 
-在 `drafts/` 目录中创建Markdown文件，或使用模板：
+1. 在 `src/content/posts/` 新建 Markdown
+2. 填写 frontmatter（schema 会在构建期校验，缺字段直接失败）：
 
-```bash
-# 复制模板
-cp drafts/文章模板.md drafts/我的新文章.md
-
-# 编辑文章
-nano drafts/我的新文章.md
-```
-
-### 3. 发布
-
-```bash
-# 生成HTML并更新首页
-npm run publish
-
-# 本地预览
-npm run serve
-
-# 在浏览器打开 http://localhost:8080
-```
-
-## 📖 文章格式
-
-每篇文章使用YAML frontmatter配置元数据：
-
-```markdown
----
-title: 文章标题
-date: 2026-01-08
-tags: [标签1, 标签2]
-excerpt: 文章摘要，会显示在首页
-slug: my-article-slug  # 可选，文件名会自动生成
----
-
-## 一级标题
-
-这里是正文内容，支持 **Markdown** 语法。
-
-### 二级标题
-
-- 支持列表
-- 支持有序列表
-
-\`\`\`javascript
-// 代码块
-function hello() {
-    console.log('Hello World!');
-}
-\`\`\`
-```
-
-## 🎨 功能使用指南
-
-### 深色模式
-
-#### 自动切换
-- 点击页面右下角的 🌓 按钮即可切换主题
-- 主题偏好会自动保存到浏览器
-- 下次访问时自动应用
-
-#### 手动调用
-```javascript
-// 切换主题
-toggleTheme();
-
-// 应用深色模式
-document.body.classList.add('dark-mode');
-
-// 移除深色模式
-document.body.classList.remove('dark-mode');
-```
-
-### 点赞系统
-
-#### 使用方式
-1. 阅读文章时，点击底部的 👍 点赞按钮
-2. 点赞状态会保存到本地浏览器
-3. 刷新页面后点赞状态保持
-
-#### 数据存储
-点赞数据存储在LocalStorage中，键名为 `blog_likes`：
-
-```javascript
-// 查看所有点赞
-const likes = JSON.parse(localStorage.getItem('blog_likes') || '{}');
-
-// 检查某篇文章是否被点赞
-const isLiked = !!likes['article-slug.html'];
-
-// 获取点赞数
-const count = likes['article-slug.html'] ? 1 : 0;
-```
-
-### 评论系统（Giscus）
-
-#### 配置步骤
-
-1. **准备GitHub仓库**
-   - 确保你的博客仓库是公开的
-   - 在仓库设置中启用Discussions功能
-
-2. **安装Giscus应用**
-   - 访问 https://github.com/apps/giscus
-   - 点击"Install"安装到你的仓库
-   - 选择你的博客仓库
-
-3. **配置Giscus**
-   - 在Giscus配置页面选择语言（建议选择"简体中文"）
-   - 选择Discussions分类（推荐"General"）
-   - 复制生成的配置参数
-
-4. **更新配置文件**
-   编辑 `giscus-config.js`，填入配置参数：
-
-   ```javascript
-   module.exports = {
-     repo: '你的GitHub用户名/myblog',  // 例如: 'john/myblog'
-     repoId: 'R_kgDOXXXXXXXXX',          // 从配置页面复制
-     category: 'General',                // 分类名称
-     categoryId: 'DIC_kwDOXXXXXXXXX',    // 分类ID
-     // ... 其他配置保持默认
-   };
+   ```yaml
+   ---
+   title: 文章标题
+   date: 2026-07-26
+   tags: [标签A, 标签B]        # 必须是数组
+   excerpt: 一句话摘要
+   topic: aiops-x-ai           # 见下方主题列表
+   category: 可选分类
+   slug: 可选，覆盖 URL 中的文件名
+   draft: false                # true 则不发布
+   ---
    ```
 
-5. **启用评论**
-   编辑 `publish.js`，找到评论部分的注释：
-   ```javascript
-   <!-- Giscus 评论系统
-   注意：首次使用需要配置 giscus-config.js
-   配置完成后，取消下方注释并替换配置参数
-   -->
-   ```
+3. `npm run build` 本地验证
+4. 推送到 `main`，GitHub Actions 自动部署
 
-   将注释取消，并添加配置参数：
+## 主题（topic）
 
-   ```javascript
-   <script src="https://giscus.app/client.js"
-       data-repo=""
-       data-repo-id=""
-       data-category=""
-       data-category-id=""
-       data-mapping="pathname"
-       data-strict="0"
-       data-reactions-enabled="1"
-       data-emit-metadata="0"
-       data-input-position="top"
-       data-theme="light"
-       data-lang="zh-CN"
-       data-loading="lazy"
-       crossorigin="anonymous"
-       async>
-   </script>
-   ```
+内容按主题聚类而非时间流——时间流会让好文章随时间沉底。
 
-6. **重新发布**
-   ```bash
-   npm run publish
-   ```
+| topic | 名称 | 说明 |
+|-------|------|------|
+| `aiops-x-ai` | 运维视角看 AI 系统 | 主线。可观测性、故障模式、成本治理、SLO、容量规划 |
+| `architecture` | 架构分析与验证 | 主线。选型推演与落地验证 |
+| `trends` | 趋势观察 | 辅助。只写有独立判断的部分 |
+| `notes` | 学习笔记 | 归档 |
 
-#### 注意事项
-- 每篇文章首次访问时，Giscus会自动创建对应的Discussion
-- 评论数据存储在你的GitHub仓库的Discussions中
-- 支持Markdown语法、代码高亮、表情等
-- 评论需要GitHub账号登录才能发表
+新增主题需同步修改 `src/content.config.ts`（枚举）与 `src/config/site.ts`（名称与描述）。
 
-## 📁 项目结构
+## AI 可读层
+
+面向生成式引擎的抓取与引用：
+
+- `/llms.txt` —— 站点索引：定位、主题分组、逐篇摘要与原文地址
+- `/llms-full.txt` —— 全部文章正文合集，一次抓取拿走全站内容
+- `/articles/<slug>.md` —— 每篇文章的 Markdown 原文端点
+- `/robots.txt` —— 显式放行 GPTBot / ClaudeBot / PerplexityBot / Google-Extended 等
+- 每页 JSON-LD（`BlogPosting` / `Blog`）与 canonical
+
+## 目录结构
 
 ```
-myblog/
-├── articles/              # 发布的HTML文章
-├── css/
-│   └── style.css         # 主样式文件（含深色模式）
-├── drafts/               # Markdown源文件
-│   ├── 文章模板.md
-│   └── 我的第一篇博客.md
-├── giscus-config.js      # Giscus评论系统配置
-├── index.html            # 首页
-├── publish.js            # 发布脚本
-├── server.js             # 开发服务器
-├── package.json           # 项目配置
-└── README.md             # 本文件
+src/
+├── content/posts/     # 文章 Markdown（唯一内容来源）
+├── content.config.ts  # 内容 schema（zod 校验）
+├── config/site.ts     # 站点信息与主题定义
+├── layouts/           # BaseLayout / PostLayout
+├── components/        # 页头页脚、TOC、搜索、分享等
+├── pages/             # 路由（含 feed.xml / llms.txt / robots.txt 等端点）
+├── lib/posts.ts       # 文章查询与 URL 工具
+└── styles/style.css   # 复古纸感主题
+scripts/verify-build.mjs   # 构建产物与 URL 基线校验
 ```
 
-## 🛠️ 开发命令
+## 部署
 
-```bash
-# 发布文章
-npm run publish
+GitHub Actions（`.github/workflows/deploy.yml`）构建 `dist/` 并发布到 GitHub Pages。
 
-# 本地预览
-npm run serve
+站点地址由环境变量控制，迁移到独立域名时只需修改 workflow 中的两个值：
 
-# 运行测试
-npm run test
+```yaml
+SITE_URL: https://git-flt.github.io
+BASE_PATH: /myblog          # 独立域名下设为 /
 ```
 
-## 🎯 2026年标准功能清单
+现生产地址：`https://git-flt.github.io/myblog`
 
-- ✅ 深色模式支持
-- ✅ 响应式设计
-- ✅ 点赞系统
-- ✅ 评论系统（Giscus）
-- ✅ Markdown写作
-- ✅ 自动发布
-- ✅ SEO友好
-- ✅ 本地预览
-- ⏳ 多平台发布（规划中）
-- ⏳ 图片优化（规划中）
-- ⏳ 搜索功能（规划中）
+## URL 稳定性
 
-## 🔧 自定义配置
+文章路径 `/articles/<slug>.html` 是从旧发布管道继承的基线，**不可变更**——变更会使外链、收藏与既有收录全部失效。
+`scripts/verify-build.mjs` 在 CI 中逐一比对这些路径，构建产物缺失即失败。
 
-### 修改主题颜色
+## 旧管道
 
-编辑 `css/style.css` 的CSS变量：
-
-```css
-:root {
-    --primary-color: #2c3e50;      /* 主色调 */
-    --secondary-color: #3498db;    /* 强调色 */
-    --text-color: #333;             /* 文本颜色 */
-    --bg-color: #f8f9fa;           /* 背景颜色 */
-    /* ... 更多变量 */
-}
-```
-
-### 修改深色模式颜色
-
-```css
-:root.dark-mode {
-    --primary-color: #ecf0f1;
-    --text-color: #ecf0f1;
-    --bg-color: #2c3e50;
-    /* ... 更多变量 */
-}
-```
-
-## 📱 部署
-
-### 使用deploy.sh脚本
-
-```bash
-# 部署到远程服务器
-./deploy.sh <服务器IP> <用户名> [域名]
-
-# 示例
-./deploy.sh 123.456.789.0 root myblog.example.com
-```
-
-### 手动部署
-
-1. 运行 `npm run publish` 生成HTML
-2. 将 `articles/`, `css/`, `index.html` 上传到服务器
-3. 配置Nginx或Caddy
-
-## 🐛 常见问题
-
-### Q: 深色模式不生效？
-A: 检查浏览器是否支持CSS变量，清空缓存后重试。
-
-### Q: 点赞数不显示？
-A: 确保LocalStorage可用，检查浏览器控制台是否有错误。
-
-### Q: 评论不显示？
-A:
-1. 确认 `giscus-config.js` 配置正确
-2. 确认GitHub仓库是公开的
-3. 确认仓库中已启用Discussions功能
-4. 检查浏览器控制台是否有错误
-
-### Q: 评论主题不跟随深色模式？
-A: 确认 `publish.js` 中的 `updateGiscusTheme()` 函数已正确配置。
-
-## 📄 许可证
-
-MIT License
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request！
-
-## 📮 联系方式
-
-如有问题，请通过GitHub Issues联系。
-
----
-
-**享受写作的乐趣！** ✍️🎉
-=======
+迁移前的自研管道（`publish.js` / `server.js` / `test.js` 及根目录下的生成产物）暂时保留作为回滚路径，
+对应 npm 脚本加了 `legacy:` 前缀。确认新站稳定后可整体删除。

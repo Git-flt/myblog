@@ -1,0 +1,88 @@
+---
+import '../styles/style.css';
+import { SITE } from '../config/site';
+import { url } from '../lib/posts';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** 供 Pagefind 索引：只有文章页需要 */
+  pagefindBody?: boolean;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+  /** 本页 Markdown 原文地址，供 AI / 读者直接获取纯文本 */
+  markdownUrl?: string;
+}
+
+const {
+  title,
+  description = SITE.description,
+  pagefindBody = false,
+  ogType = 'website',
+  ogImage,
+  jsonLd,
+  markdownUrl,
+} = Astro.props;
+
+// 无扩展名的路径（首页/目录页）统一带尾斜杠，避免与旧站 canonical 产生两个变体
+const canonicalPath = /\.[a-z0-9]+$/i.test(Astro.url.pathname)
+  ? Astro.url.pathname
+  : Astro.url.pathname.replace(/\/?$/, '/');
+const canonical = new URL(canonicalPath, Astro.site).href;
+const fullTitle = title === SITE.title ? `${SITE.title} · ${SITE.tagline}` : `${title} - ${SITE.title}`;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={SITE.title} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="alternate" type="application/rss+xml" title="RSS订阅" href={url('feed.xml')} />
+    {markdownUrl && <link rel="alternate" type="text/markdown" title="Markdown 原文" href={markdownUrl} />}
+
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
+
+  </head>
+  <body data-pagefind-body={pagefindBody ? '' : undefined}>
+    {/* 首个子节点即恢复主题，避免深色模式下的白屏闪烁 */}
+    <script is:inline>
+      try {
+        if (localStorage.getItem('theme') === 'dark') {
+          document.body.classList.add('dark-mode');
+        }
+      } catch (_) {}
+    </script>
+    <ReadingProgress />
+    <ThemeToggle />
+    <Header />
+    <main class="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script async is:inline src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  </body>
+</html>

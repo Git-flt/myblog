@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { TOPICS, TOPIC_ORDER } from '../../config/site';
+import { getPublishedPosts, url } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return TOPIC_ORDER.map((topic) => ({
+    params: { topic },
+    props: { posts: posts.filter((post) => post.data.topic === topic) },
+  }));
+}
+
+const { topic } = Astro.params;
+const { posts } = Astro.props;
+const meta = TOPICS[topic as keyof typeof TOPICS];
+---
+
+<BaseLayout title={meta.name} description={meta.summary}>
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">{meta.icon} {meta.name}</h2>
+      <p class="page-intro">{meta.summary}</p>
+
+      {posts.length === 0 ? (
+        <p class="page-intro">这个主题还没有文章。</p>
+      ) : (
+        <div class="article-list view-list">
+          {posts.map((post) => <ArticleCard post={post} />)}
+        </div>
+      )}
+
+      <p class="more-link">
+        <a class="btn btn-ghost" href={url('writing.html')}>← 返回全部文章</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

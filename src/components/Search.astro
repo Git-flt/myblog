@@ -1,0 +1,89 @@
+---
+import { url } from '../lib/posts';
+
+const pagefindBase = url('_pagefind');
+---
+
+<div id="search" class="search-container" data-pagefind-base={pagefindBase}></div>
+
+<script>
+  const container = document.getElementById('search');
+
+  function readInitialQuery(): string {
+    try {
+      return new URLSearchParams(window.location.search).get('q') || '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function bindSearchShortcut() {
+    document.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement | null;
+      const typing =
+        target &&
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (typing) return;
+      if (event.key === '/') {
+        event.preventDefault();
+        const input = document.querySelector<HTMLInputElement>('.pagefind-ui__search-input');
+        input?.focus();
+        input?.select();
+      }
+    });
+  }
+
+  function mountSearch() {
+    const PagefindUI = (window as any).PagefindUI;
+    if (!container || !PagefindUI) return;
+
+    new PagefindUI({
+      element: '#search',
+      showSubResults: true,
+      showImages: false,
+      excerptLength: 15,
+      translations: {
+        placeholder: '搜索文章...',
+        clear_search: '清除',
+        load_more: '加载更多',
+        search_label: '搜索',
+        filters_label: '筛选',
+        zero_results: '未找到 [SEARCH_TERM] 的相关结果',
+        many_results: '找到 [COUNT] 个 [SEARCH_TERM] 的相关结果',
+        one_result: '找到 [COUNT] 个 [SEARCH_TERM] 的相关结果',
+        alt_search: '未找到 [SEARCH_TERM] 的相关结果。改为显示 [DIFFERENT_TERM] 的结果',
+        search_suggestion: '未找到 [SEARCH_TERM] 的相关结果。尝试以下搜索:',
+      },
+    });
+
+    bindSearchShortcut();
+
+    const initialQuery = readInitialQuery();
+    if (initialQuery) {
+      setTimeout(() => {
+        const input = document.querySelector<HTMLInputElement>('.pagefind-ui__search-input');
+        if (!input) return;
+        input.value = initialQuery;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }, 120);
+    }
+  }
+
+  if (container) {
+    const base = container.dataset.pagefindBase ?? '/_pagefind';
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `${base}/pagefind-ui.css`;
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = `${base}/pagefind-ui.js`;
+    script.onload = mountSearch;
+    // 开发模式下索引尚未生成，静默降级而不是抛错
+    script.onerror = () => {
+      container.innerHTML = '<p class="search-fallback">搜索索引尚未生成，请先运行 npm run build。</p>';
+    };
+    document.head.appendChild(script);
+  }
+</script>

@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, TOPICS, TOPIC_ORDER } from '../config/site';
+import { url } from '../lib/posts';
+
+// 作品暂以列表形式放在这里；等积累到值得深挖时再拆出独立的 /works 页面
+const projects = [
+  {
+    name: 'BeijingCIMS',
+    desc: '面向国际患者的医疗咨询站，含线索登记接口、管理后台与数据库迁移，中英双语。',
+    stack: ['Cloudflare Pages Functions', 'Supabase'],
+    href: 'https://github.com/Git-flt/BeijingCIMS',
+  },
+  {
+    name: 'myblog（本站）',
+    desc: '从自研发布脚本迁到 Astro，按主题聚类，附带面向大模型的机器可读层。',
+    stack: ['Astro', 'Pagefind', 'llms.txt'],
+    href: 'https://github.com/Git-flt/myblog',
+  },
+  {
+    name: 'MyTimeMachine',
+    desc: '文化怀旧方向的内容原型。已归档——脚手架投入重于产品本身，是一次过度工程的教训。',
+    stack: ['原型', '已归档'],
+    href: 'https://github.com/Git-flt/MyTimeMachine',
+  },
+];
+
+const primaryTopics = TOPIC_ORDER.filter((id) => TOPICS[id].primary);
+---
+
+<BaseLayout title="关于" description={SITE.description}>
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">关于</h2>
+
+      <div class="about-block">
+        <p>
+          一线城市 IT 从业者，20 余年经验，本职方向是 AIOps 与大数据，现在把重心放在 AI 平台工程。
+        </p>
+        <p>
+          这里写 Agent 与 LLM 系统跑进生产环境之后的事：可观测性、故障处理、成本与容量。
+          更新节奏大致是{SITE.cadence}。
+        </p>
+      </div>
+
+      <div class="about-block">
+        <h3>主题</h3>
+        <ul class="taxonomy-list">
+          {primaryTopics.map((id) => (
+            <li>
+              <a href={url(`topics/${id}.html`)}>{TOPICS[id].icon} {TOPICS[id].name}</a>
+              —— {TOPICS[id].summary}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="about-block">
+        <h3>作品</h3>
+        <ul class="taxonomy-list">
+          {projects.map((project) => (
+            <li>
+              <a href={project.href} target="_blank" rel="noopener noreferrer">{project.name}</a>
+              <span class="project-stack">{project.stack.map((item) => <span class="tag">{item}</span>)}</span>
+              <p class="article-excerpt">{project.desc}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="about-block">
+        <h3>关于内容</h3>
+        <p>
+          AI 参与检索、整理、润色与配图；观点、事实核查和方案验证由我完成。
+          文中讲某个做法可行，是我自己跑通过的；只是推演，会标注出来。
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

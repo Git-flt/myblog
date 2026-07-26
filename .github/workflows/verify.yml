@@ -1,0 +1,23 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [ main, develop, feat/** ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      # 内容 schema（日期缺失、tags 格式不一致等）在这里被拦下
+      - run: npm run check
+      - run: npm run build
+      - name: Verify build output
+        run: node scripts/verify-build.mjs

@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Search from '../components/Search.astro';
+import { SITE, TOPICS, TOPIC_ORDER } from '../config/site';
+import { getPublishedPosts, url } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const latest = posts.slice(0, 6);
+
+const topicCounts = new Map<string, number>();
+for (const post of posts) {
+  topicCounts.set(post.data.topic, (topicCounts.get(post.data.topic) ?? 0) + 1);
+}
+
+const primaryTopics = TOPIC_ORDER.filter((id) => TOPICS[id].primary);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: SITE.title,
+  description: SITE.description,
+  url: new URL(url(), Astro.site).href,
+  author: { '@type': 'Person', name: SITE.author },
+  inLanguage: SITE.lang,
+};
+---
+
+<BaseLayout title={SITE.title} jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <p class="hero-kicker">RETRO TECH JOURNAL · SINCE 2026</p>
+      <h2>{SITE.tagline}</h2>
+      <p class="hero-desc">{SITE.description}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={url('writing.html')}>开始阅读</a>
+        <a class="btn btn-ghost" href={url('about.html')}>认识作者</a>
+      </div>
+      <ul class="hero-stats" aria-label="站点数据">
+        <li><strong>{posts.length}</strong><span>篇文章</span></li>
+        <li><strong>{TOPIC_ORDER.length}</strong><span>个主题</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="home-spotlight" aria-label="主线主题">
+    <div class="container">
+      <div class="spotlight-grid">
+        {primaryTopics.map((id) => (
+          <article class="spotlight-card">
+            <h3>
+              <a href={url(`topics/${id}.html`)}>{TOPICS[id].icon} {TOPICS[id].name}</a>
+            </h3>
+            <p>{TOPICS[id].summary}</p>
+            <p class="spotlight-meta">{topicCounts.get(id) ?? 0} 篇</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="articles" class="articles">
+    <div class="container">
+      <h2 class="section-title">最新文章</h2>
+
+      <Search />
+
+      <section class="featured-strip" aria-label="主题导航">
+        <a class="featured-item" href={url('writing.html')}>
+          <span>📚</span><strong>全部文章</strong><em>按主题聚类浏览</em>
+        </a>
+        <a class="featured-item" href={url('tags.html')}>
+          <span>🏷️</span><strong>标签索引</strong><em>按关键词快速检索</em>
+        </a>
+        <a class="featured-item" href={url('feed.xml')}>
+          <span>📡</span><strong>RSS 订阅</strong><em>第一时间跟进更新</em>
+        </a>
+      </section>
+
+      <div id="article-list" class="article-list view-list">
+        {latest.map((post) => <ArticleCard post={post} />)}
+      </div>
+
+      {posts.length > latest.length && (
+        <p class="more-link">
+          <a class="btn btn-ghost" href={url('writing.html')}>查看全部 {posts.length} 篇 →</a>
+        </p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

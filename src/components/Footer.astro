@@ -1,0 +1,21 @@
+---
+import { SITE } from '../config/site';
+import { url } from '../lib/posts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; {year} {SITE.title}. All rights reserved.</p>
+    <p class="footer-stats">
+      <span id="busuanzi_container_site_pv">总访问 <span id="busuanzi_value_site_pv">-</span></span>
+      <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv">-</span></span>
+    </p>
+    <p class="footer-stats">
+      <a href={url('feed.xml')}>RSS</a>
+      <a href={url('llms.txt')}>llms.txt</a>
+      <a href={url('sitemap-index.xml')}>Sitemap</a>
+    </p>
+  </div>
+</footer>

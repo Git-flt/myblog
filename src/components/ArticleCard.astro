@@ -1,0 +1,26 @@
+---
+import type { Post } from '../lib/posts';
+import { postUrl, readingTime, formatDate, url } from '../lib/posts';
+import { TOPICS } from '../config/site';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const href = postUrl(post);
+const minutes = readingTime(post.body ?? '');
+const topic = TOPICS[post.data.topic];
+---
+
+<article class="article-card" data-topic={post.data.topic}>
+  <h3><a href={href}>{post.data.title}</a></h3>
+  <p class="article-meta">
+    <a class="category-pill" href={url(`topics/${post.data.topic}.html`)}>{topic.icon} {topic.name}</a>
+    <span class="date">{formatDate(post.data.date)}</span>
+    <span class="reading-time">⏱️ {minutes} 分钟</span>
+    {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+  </p>
+  <p class="article-excerpt">{post.data.excerpt}</p>
+  <a href={href} class="read-more">阅读全文 →</a>
+</article>
