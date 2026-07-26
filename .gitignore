@@ -45,3 +45,6 @@ coverage/
 *.backup
 backup/
 drafts/backup/
+
+# Claude Code 本地配置（origin/main 已移除跟踪）
+.claude/
