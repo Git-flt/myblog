@@ -38,15 +38,13 @@ const jsonLd = {
       </div>
       <ul class="hero-stats" aria-label="站点数据">
         <li><strong>{posts.length}</strong><span>篇文章</span></li>
-        <li><strong>{primaryTopics.length}</strong><span>个主线主题</span></li>
-        <li><strong>{SITE.cadence}</strong><span>更新节奏</span></li>
+        <li><strong>{TOPIC_ORDER.length}</strong><span>个主题</span></li>
       </ul>
     </div>
   </section>
 
   <section class="home-spotlight" aria-label="主线主题">
     <div class="container">
-      <h2 class="section-title">在写什么</h2>
       <div class="spotlight-grid">
         {primaryTopics.map((id) => (
           <article class="spotlight-card">

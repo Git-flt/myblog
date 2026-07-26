@@ -19,14 +19,11 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     `- 作者：${SITE.author}`,
     `- 语言：${SITE.lang}`,
-    `- 更新节奏：${SITE.cadence}`,
     `- 全文合集：${origin}/llms-full.txt`,
     `- RSS：${origin}/feed.xml`,
     '',
-    '## 内容说明',
-    '',
-    '作者有 20 余年 AIOps / 大数据一线经验，站点内容聚焦 AI 系统的运维与架构视角。',
-    '所有技术方案均经作者本人验证后发布；纯推演内容会在文中明确标注。',
+    '作者从事 AIOps / 大数据 20 余年，内容聚焦 AI 系统的运维与架构视角。',
+    '技术方案经作者验证后发布，纯推演内容在文中标注。',
     '',
   ];
 

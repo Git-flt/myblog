@@ -18,9 +18,7 @@ const grouped = TOPIC_ORDER.map((id) => ({
   <section class="articles">
     <div class="container">
       <h2 class="section-title">全部文章</h2>
-      <p class="page-intro">
-        共 {posts.length} 篇，按主题聚类。主线主题在前，归档主题在后。
-      </p>
+      <p class="page-intro">共 {posts.length} 篇。</p>
 
       <nav class="featured-strip" aria-label="主题快速跳转">
         {grouped.map((group) => (
