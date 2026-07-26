@@ -2,11 +2,18 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// 站点地址与子路径均可由环境变量覆盖：
-//   默认沿用当前 GitHub Pages 部署（https://git-flt.github.io/myblog）
-//   迁移到独立域名后只需设置 SITE_URL=https://example.com BASE_PATH=/
-const SITE_URL = process.env.SITE_URL || 'https://git-flt.github.io';
-const BASE_PATH = process.env.BASE_PATH || '/myblog';
+// 站点地址与子路径由环境变量决定，同一份代码可部署到不同平台：
+//
+//   Vercel（目标平台）  零配置——自动读取 VERCEL_PROJECT_PRODUCTION_URL，base 为根路径
+//   GitHub Pages        由 deploy.yml 显式传入 SITE_URL / BASE_PATH=/myblog
+//   自定义域名          设置 SITE_URL=https://example.com 即可
+const SITE_URL =
+  process.env.SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:4321');
+// 默认根路径：Vercel / 自定义域名的常态。GitHub Pages 的子路径由 workflow 显式覆盖
+const BASE_PATH = process.env.BASE_PATH || '/';
 /** 首页绝对路径（含 base），供重定向目标使用 */
 const HOME_PATH = `${BASE_PATH.replace(/\/$/, '')}/`;
 

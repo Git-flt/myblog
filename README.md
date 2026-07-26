@@ -14,32 +14,49 @@
 
 ```bash
 npm ci
-npm run dev        # http://localhost:4321/myblog
+npm run dev        # http://localhost:4321
 npm run build      # 构建 + 生成搜索索引，输出到 dist/
 npm run preview    # 预览构建产物
 npm run check      # 内容 schema 与类型校验
+npm run verify     # 校验构建产物与 URL 基线
 ```
 
-## 写作流程
+## 写作与发布
 
-1. 在 `src/content/posts/` 新建 Markdown
-2. 填写 frontmatter（schema 会在构建期校验，缺字段直接失败）：
+```bash
+# 1. 新建草稿（自动生成合规 frontmatter）
+npm run new -- "文章标题"
+npm run new -- "文章标题" --topic architecture     # 指定主题
+npm run new -- "文章标题" --slug custom-url        # 指定 URL
 
-   ```yaml
-   ---
-   title: 文章标题
-   date: 2026-07-26
-   tags: [标签A, 标签B]        # 必须是数组
-   excerpt: 一句话摘要
-   topic: aiops-x-ai           # 见下方主题列表
-   category: 可选分类
-   slug: 可选，覆盖 URL 中的文件名
-   draft: false                # true 则不发布
-   ---
-   ```
+# 2. 写。期间本地预览
+npm run dev
 
-3. `npm run build` 本地验证
-4. 推送到 `main`，GitHub Actions 自动部署
+# 3. 发布：把 frontmatter 里的 draft 改成 false
+# 4. 推送
+git add . && git commit -m "post: 文章标题" && git push
+```
+
+推送到 `main` 后自动构建部署，无需手动执行构建命令。
+
+`draft: true` 的文章不会出现在站点、RSS、sitemap 与 llms.txt 中，可以放心提交。
+
+### frontmatter 字段
+
+schema 在构建期校验，缺字段或格式错误会直接构建失败：
+
+```yaml
+---
+title: 文章标题              # 必填
+date: 2026-07-26            # 必填
+tags: [标签A, 标签B]         # 必填，必须是数组
+excerpt: 一句话摘要          # 必填，出现在首页卡片 / RSS / llms.txt
+topic: aiops-x-ai           # 必填，见下方主题列表
+category: 可选分类
+slug: 可选，覆盖 URL 中的文件名
+draft: false                # true 则不发布
+---
+```
 
 ## 主题（topic）
 
@@ -81,16 +98,47 @@ scripts/verify-build.mjs   # 构建产物与 URL 基线校验
 
 ## 部署
 
-GitHub Actions（`.github/workflows/deploy.yml`）构建 `dist/` 并发布到 GitHub Pages。
+站点地址与子路径由环境变量决定，同一份代码可部署到不同平台：
 
-站点地址由环境变量控制，迁移到独立域名时只需修改 workflow 中的两个值：
+| 变量 | 作用 | 默认值 |
+|------|------|--------|
+| `SITE_URL` | 站点绝对地址，影响 canonical / sitemap / llms.txt | Vercel 上自动取 `VERCEL_PROJECT_PRODUCTION_URL`，本地为 `http://localhost:4321` |
+| `BASE_PATH` | 子路径 | `/` |
+
+### 当前：GitHub Pages
+
+`.github/workflows/deploy.yml` 在推送到 `main` 后构建并发布，显式传入子路径：
 
 ```yaml
 SITE_URL: https://git-flt.github.io
-BASE_PATH: /myblog          # 独立域名下设为 /
+BASE_PATH: /myblog
 ```
 
-现生产地址：`https://git-flt.github.io/myblog`
+生产地址：`https://git-flt.github.io/myblog`
+
+### 目标：Vercel
+
+`vercel.json` 已就绪（构建命令、输出目录、`llms.txt` 与 `.md` 端点的 Content-Type、静态资源缓存）。
+Astro 静态输出在 Vercel 上零配置运行，**不需要设置任何环境变量**——`BASE_PATH` 默认即为根路径。
+
+切换步骤：
+
+```bash
+npx vercel link       # 关联项目
+npx vercel --prod     # 首次部署
+```
+
+之后在 Vercel 面板开启 Git 集成，推送 `main` 即自动部署。绑定自定义域名后，
+在项目设置里加环境变量 `SITE_URL=https://你的域名` 即可（不加则用 Vercel 分配的域名）。
+
+**切换时注意**：站点从 `git-flt.github.io/myblog/...` 变为 `你的域名/...`，
+所有旧链接会失效。如果在意既有外链，保留 GitHub Pages 的部署作为跳转层，
+不要直接停用。
+
+### Cloudflare Pages（备选）
+
+构建命令 `npm run build`、输出目录 `dist`，同样零配置。`vercel.json` 会被忽略，
+`Content-Type` 与缓存策略需改用 `_headers` 文件。
 
 ## URL 稳定性
 

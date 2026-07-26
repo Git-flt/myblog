@@ -67,7 +67,8 @@
 ## 五、技术约束
 
 - **URL 不可变**：`/articles/<slug>.html` 是从旧管道继承的基线，变更会使外链与既有收录失效。`scripts/verify-build.mjs` 在 CI 中比对，不要绕过
-- **栈已定**：Astro 5 + GitHub Pages（后续迁 Cloudflare Pages）。沿用作者已跑通的 BeijingCIMS 基线，**不引入新东西**
+- **栈已定**：Astro 5。托管当前在 GitHub Pages，**目标平台为 Vercel**（`vercel.json` 已就绪，零环境变量即可部署）。**不引入新东西**
+- **平台无关**：`SITE_URL` / `BASE_PATH` 两个环境变量决定站点地址，代码里不要硬编码域名或子路径；内部链接一律走 `src/lib/posts.ts` 的 `url()`
 - **明确不做**（当前阶段）：
   - ❌ Supabase / 向量库 —— 文字站现阶段不需要
   - ⏸ RAG 问答 `/api/ask` —— 文章少于 30 篇时价值有限，Pagefind 够用
@@ -80,8 +81,8 @@
 
 ## 六、待作者决定
 
-1. **域名与对外署名** —— 现为 `git-flt.github.io/myblog`。独立域名是 GEO 权重积累的前提，`SITE_URL` / `BASE_PATH` 已抽成 workflow 环境变量
-2. **`articles/hello-world.html`** —— 孤儿页面（有 HTML 无源文件），切换后会 404，待处置
+1. **域名与对外署名** —— 现为 `git-flt.github.io/myblog`。独立域名是 GEO 权重积累的前提
+2. **何时切到 Vercel** —— 配置已就绪。切换会使既有 `github.io/myblog/...` 链接失效，届时应保留 GitHub Pages 部署作为跳转层
 3. **openclaw 一文的日期** —— 迁移时按文章自身署名填为 `2026-01-30`（旧站显示 `2026-03-08`，因原 frontmatter 缺 date 而由文件时间兜底）
 
 ---
