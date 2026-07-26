@@ -5,13 +5,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# 设置权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 只允许一个并发部署
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -26,24 +24,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      # 内容 schema 与类型校验：frontmatter 不合规会在这里失败，而不是构建出坏页面
+      - name: Check
+        run: npm run check
 
-      - name: Test (strict http)
-        run: |
-          node server.js &
-          SERVER_PID=$!
-          sleep 2
-          STRICT_HTTP=1 npm test
-          kill $SERVER_PID
-
+      # SITE_URL / BASE_PATH 决定 canonical、sitemap 与 llms.txt 里的绝对地址。
+      # 迁移到独立域名后，改这两个值即可（BASE_PATH 设为 /）。
       - name: Build site
         run: npm run build
+        env:
+          SITE_URL: https://git-flt.github.io
+          BASE_PATH: /myblog
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -51,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'dist'
 
   deploy:
     environment:

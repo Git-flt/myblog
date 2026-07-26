@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTagCounts, getPublishedPosts, postUrl, url } from '../lib/posts';
+
+const tagCounts = await getTagCounts();
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="标签索引" description="按关键词检索全部文章。">
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">🏷️ 标签索引</h2>
+      <p class="page-intro">共 {tagCounts.length} 个标签。</p>
+
+      <div class="tag-filter">
+        {tagCounts.map(([tag, count]) => (
+          <a class="tag-filter-btn" href={`#tag-${encodeURIComponent(tag)}`}>{tag} ({count})</a>
+        ))}
+      </div>
+
+      {tagCounts.map(([tag]) => (
+        <section class="topic-group" id={`tag-${encodeURIComponent(tag)}`}>
+          <h3 class="section-title">{tag}</h3>
+          <ul class="taxonomy-list">
+            {posts
+              .filter((post) => post.data.tags.includes(tag))
+              .map((post) => (
+                <li><a href={postUrl(post)}>{post.data.title}</a></li>
+              ))}
+          </ul>
+        </section>
+      ))}
+
+      <p class="more-link">
+        <a class="btn btn-ghost" href={url('writing.html')}>← 返回全部文章</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

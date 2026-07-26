@@ -1,0 +1,71 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import Toc from '../components/Toc.astro';
+import PostActions from '../components/PostActions.astro';
+import Giscus from '../components/Giscus.astro';
+import { SITE, TOPICS } from '../config/site';
+import { type Post, postSlug, postUrl, readingTime, formatDate, url } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
+}
+
+const { post, headings } = Astro.props;
+const { title, date, tags, excerpt, topic } = post.data;
+
+const slug = postSlug(post);
+const minutes = readingTime(post.body ?? '');
+const absoluteUrl = new URL(postUrl(post), Astro.site).href;
+const markdownUrl = url(`articles/${slug}.md`);
+const topicMeta = TOPICS[topic];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  datePublished: date.toISOString(),
+  dateModified: date.toISOString(),
+  author: { '@type': 'Person', name: SITE.author },
+  publisher: { '@type': 'Person', name: SITE.author },
+  description: excerpt,
+  keywords: tags.join(', '),
+  url: absoluteUrl,
+  inLanguage: SITE.lang,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': absoluteUrl },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={excerpt}
+  ogType="article"
+  pagefindBody
+  jsonLd={jsonLd}
+  markdownUrl={markdownUrl}
+>
+  <article class="article-content">
+    <div class="container">
+      <header class="article-header">
+        <h1>{title}</h1>
+        <p class="article-meta">
+          <a class="category-pill" href={url(`topics/${topic}.html`)}>{topicMeta.icon} {topicMeta.name}</a>
+          <span class="date">📅 {formatDate(date)}</span>
+          <span class="reading-time">⏱️ 约 {minutes} 分钟阅读</span>
+          {tags.map((tag) => <span class="tag">{tag}</span>)}
+        </p>
+      </header>
+
+      <div class="article-layout">
+        <Toc headings={headings} />
+        <div class="article-body">
+          <slot />
+        </div>
+      </div>
+
+      <PostActions slug={slug} title={title} articleUrl={absoluteUrl} markdownUrl={markdownUrl} />
+      <Giscus />
+    </div>
+  </article>
+</BaseLayout>

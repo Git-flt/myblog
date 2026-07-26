@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { TOPICS, TOPIC_ORDER } from '../config/site';
+import { getPublishedPosts, url } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+
+// 按主题聚类而非时间流：好文章不该随时间沉底
+const grouped = TOPIC_ORDER.map((id) => ({
+  id,
+  meta: TOPICS[id],
+  posts: posts.filter((post) => post.data.topic === id),
+})).filter((group) => group.posts.length > 0);
+---
+
+<BaseLayout title="全部文章" description="按主题聚类的全部文章。">
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">全部文章</h2>
+      <p class="page-intro">
+        共 {posts.length} 篇，按主题聚类。主线主题在前，归档主题在后。
+      </p>
+
+      <nav class="featured-strip" aria-label="主题快速跳转">
+        {grouped.map((group) => (
+          <a class="featured-item" href={`#${group.id}`}>
+            <span>{group.meta.icon}</span>
+            <strong>{group.meta.name}</strong>
+            <em>{group.posts.length} 篇</em>
+          </a>
+        ))}
+      </nav>
+
+      {grouped.map((group) => (
+        <section class="topic-group" id={group.id}>
+          <h3 class="section-title">
+            <a href={url(`topics/${group.id}.html`)}>{group.meta.icon} {group.meta.name}</a>
+          </h3>
+          <p class="page-intro">{group.meta.summary}</p>
+          <div class="article-list view-list">
+            {group.posts.map((post) => <ArticleCard post={post} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

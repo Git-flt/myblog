@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, TOPICS, TOPIC_ORDER } from '../config/site';
+import { url } from '../lib/posts';
+
+// 作品暂以列表形式放在这里；等积累到值得深挖时再拆出独立的 /works 页面
+const projects = [
+  {
+    name: 'BeijingCIMS',
+    desc: '面向国际患者的医疗咨询服务站。Cloudflare Pages + Pages Functions + Supabase，含线索登记接口、管理后台与数据库迁移，中英双语。',
+    stack: ['Cloudflare Pages Functions', 'Supabase', '双语站点'],
+    href: 'https://github.com/Git-flt/BeijingCIMS',
+  },
+  {
+    name: 'myblog（本站）',
+    desc: '从自研 Node 发布脚本迁移到 Astro 的内容站，按主题聚类组织，并提供面向 AI 的机器可读层（llms.txt 与逐篇 Markdown 原文端点）。',
+    stack: ['Astro', 'Pagefind', 'llms.txt'],
+    href: 'https://github.com/Git-flt/myblog',
+  },
+  {
+    name: 'MyTimeMachine',
+    desc: '文化怀旧方向的内容原型（Demo）。复盘：工程脚手架（多套烟测脚本、文件存储与备份轮转）投入明显重于产品本身，是一次过度工程的教训。',
+    stack: ['原型', '已归档'],
+    href: 'https://github.com/Git-flt/MyTimeMachine',
+  },
+];
+
+const primaryTopics = TOPIC_ORDER.filter((id) => TOPICS[id].primary);
+---
+
+<BaseLayout title="关于" description={SITE.description}>
+  <section class="articles">
+    <div class="container">
+      <h2 class="section-title">关于</h2>
+
+      <div class="about-block">
+        <h3>我是谁</h3>
+        <p>
+          一线城市 IT 从业者，20 余年经验，本职方向是 AIOps 与大数据。
+          现在把重心放在 AI 平台工程：Agent 与 LLM 系统真正跑到生产环境里，需要的可观测性、成本治理、
+          故障处理与容量规划，和传统系统既有相通之处，也有全新的坑。
+        </p>
+        <p>
+          这个站就是记录这条路径的地方——<strong>{SITE.tagline}</strong>。
+        </p>
+      </div>
+
+      <div class="about-block">
+        <h3>这里写什么</h3>
+        <ul class="taxonomy-list">
+          {primaryTopics.map((id) => (
+            <li>
+              <a href={url(`topics/${id}.html`)}>{TOPICS[id].icon} {TOPICS[id].name}</a>
+              —— {TOPICS[id].summary}
+            </li>
+          ))}
+        </ul>
+        <p>更新节奏：<strong>{SITE.cadence}</strong>。</p>
+      </div>
+
+      <div class="about-block">
+        <h3>作品</h3>
+        <ul class="taxonomy-list">
+          {projects.map((project) => (
+            <li>
+              <a href={project.href} target="_blank" rel="noopener noreferrer">{project.name}</a>
+              <span class="project-stack">{project.stack.map((item) => <span class="tag">{item}</span>)}</span>
+              <p class="article-excerpt">{project.desc}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="about-block">
+        <h3>关于 AI 与这个站的内容</h3>
+        <p>
+          我用 AI 做资料检索、结构建议、语言润色、摘要与配图。但<strong
+            >观点、判断、事实核查、结论，以及所有技术方案的验证，都由我本人完成</strong
+          >。
+        </p>
+        <p>
+          具体来说：这里不会出现未经我亲自跑通就发布的技术方案。如果一篇文章讲某个架构可行，
+          意味着我自己验证过；如果只是推演，我会明确标注。
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

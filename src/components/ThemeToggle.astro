@@ -1,0 +1,32 @@
+---
+// 主题切换：原实现用全局 onclick="toggleTheme()"，这里改为事件绑定，去掉全局函数耦合
+---
+
+<button class="theme-toggle" type="button" aria-label="切换主题">🌓</button>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+
+  function syncGiscusTheme() {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (!iframe?.contentWindow) return;
+    const isDark = document.body.classList.contains('dark-mode');
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: isDark ? 'dark' : 'light' } } },
+      'https://giscus.app'
+    );
+  }
+
+  button?.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    try {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    } catch (_) {
+      // 隐私模式下写入失败可忽略
+    }
+    setTimeout(syncGiscusTheme, 100);
+  });
+
+  // giscus 加载完成后同步一次主题
+  setTimeout(syncGiscusTheme, 800);
+</script>

@@ -1,0 +1,27 @@
+---
+import { SITE } from '../config/site';
+import { url } from '../lib/posts';
+
+const path = Astro.url.pathname;
+const isActive = (target: string) => path === target || (target !== url() && path.startsWith(target));
+
+const links = [
+  { href: url(), label: '首页' },
+  { href: url('writing.html'), label: '文章' },
+  { href: url('categories.html'), label: '分类' },
+  { href: url('tags.html'), label: '标签' },
+  { href: url('about.html'), label: '关于' },
+];
+---
+
+<header class="header">
+  <div class="container">
+    <h1 class="logo"><a href={url()}>{SITE.logo}</a></h1>
+    <nav class="nav">
+      {links.map((link) => (
+        <a href={link.href} class={isActive(link.href) ? 'active' : undefined}>{link.label}</a>
+      ))}
+      <a href={url('feed.xml')} class="rss-link" title="RSS订阅">📡</a>
+    </nav>
+  </div>
+</header>

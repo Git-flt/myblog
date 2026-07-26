@@ -1,0 +1,82 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+// 只取 h2/h3，与原实现一致；服务端渲染，不再靠客户端扫 DOM
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <aside class="article-toc" id="articleToc" aria-label="文章目录">
+      <div class="article-toc-head">
+        <h3>目录</h3>
+        <button type="button" id="tocToggle" class="toc-toggle" aria-expanded="true" aria-controls="tocList">
+          收起
+        </button>
+      </div>
+      <nav id="tocList">
+        {items.map((h) => (
+          <a class={`toc-link toc-h${h.depth}`} data-target={h.slug} href={`#${h.slug}`}>
+            {h.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+  )
+}
+
+<script>
+  const tocBox = document.getElementById('articleToc');
+  const tocList = document.getElementById('tocList');
+  const tocToggle = document.getElementById('tocToggle');
+
+  if (tocBox && tocList) {
+    const setCollapsed = (collapsed: boolean) => {
+      tocBox.classList.toggle('collapsed', collapsed);
+      tocList.hidden = collapsed;
+      if (tocToggle) {
+        tocToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        tocToggle.textContent = collapsed ? '展开' : '收起';
+      }
+    };
+
+    // 移动端默认收起
+    if (window.matchMedia?.('(max-width: 768px)').matches) setCollapsed(true);
+
+    tocToggle?.addEventListener('click', () => setCollapsed(!tocBox.classList.contains('collapsed')));
+
+    const links = Array.from(tocList.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+    const headings = links
+      .map((link) => document.getElementById(link.dataset.target ?? ''))
+      .filter((el): el is HTMLElement => el !== null);
+
+    // 平滑滚动
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const target = document.getElementById(link.dataset.target ?? '');
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${link.dataset.target}`);
+      });
+    });
+
+    // 当前章节高亮
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (!visible) return;
+        links.forEach((link) => link.classList.toggle('active', link.dataset.target === visible.target.id));
+      },
+      { rootMargin: '-10% 0px -70% 0px', threshold: 0 }
+    );
+    headings.forEach((heading) => observer.observe(heading));
+  }
+</script>

@@ -28,6 +28,7 @@ yarn-error.log*
 dist/
 build/
 *.tgz
+.astro/
 
 # 临时文件
 *.tmp
